@@ -1,5 +1,6 @@
 import Image from "next/image";
 import logo from "./_assets/logo.png";
+import Navbar from "./_partials/navbar";
 import type { Metadata } from "next";
 import "../globals.css";
 
@@ -24,7 +25,7 @@ export default function CustomLayout({
       <body>
         <div className="flex flex-row w-full h-screen bg-main-color">
           {/* Container */}
-          <div className="lg:w-[65%] w-full h-full bg-white shadow-lg lg:rounded-tr-[40px] lg:rounded-br-[40px]">
+          <div className="lg:w-[60%] w-full h-full bg-white shadow-lg lg:rounded-tr-[40px] lg:rounded-br-[40px]">
             <div className="mx-10 my-10">
               {/* Logo */}
               <Image
@@ -38,13 +39,18 @@ export default function CustomLayout({
               {/* Tagline */}
               <TagDescription mainline={mainline} line={line} />
 
+                {/* Navbar */} 
+                <Navbar />
+
               {/* Main Content */}
-              {children}
+              <div className="mt-10">
+                {children}
+              </div>
             </div>
           </div>
 
           {/* Side Content */}
-          <div className="sm:hidden lg:flex items-center justify-center flex-1 bg-gray-800 text-white">
+          <div className="sm:hidden lg:flex items-center justify-center flex-1">
             <p className="text-2xl">Side Content</p>
           </div>
         </div>

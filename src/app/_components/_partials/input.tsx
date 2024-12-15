@@ -10,6 +10,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 const Input = forwardRef<HTMLInputElement, InputProps>(
   (
     {
+      type= '',
       className = '',
       wrapperClassName = '',
       variant = 'default',
@@ -20,6 +21,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
   ) => {
     // Gaya dasar input
     const baseStyles = `
+      w-full
       bg-transparent
       border
       rounded-[10px]
@@ -41,6 +43,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       <div className={`flex items-center ${wrapperClassName}`}>
         {icon && <div className="mr-2">{icon}</div>}
         <input
+         type={type}
           ref={ref}
           className={`
             ${baseStyles}
