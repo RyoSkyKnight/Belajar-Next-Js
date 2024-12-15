@@ -11,6 +11,7 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        'main-color': '#FACC14', // Warna utama yang ditambahkan
       },
     },
   },
