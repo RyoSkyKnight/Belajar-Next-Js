@@ -37,24 +37,18 @@ export default function Page() {
     sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
   };
 
-  // Submit data ke API
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Handle submit form
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      // Kirim data ke API
-      await fetch("/api/program", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
 
-      // Data juga sudah ada di sessionStorage, tinggal redirect
-      router.push("/pages/program");
-    } catch (error) {
-      console.error("Gagal mengirim data ke API", error);
-    }
+    // Simpan data di sessionStorage
+    sessionStorage.setItem("formData", JSON.stringify(formData));
+
+    // Redirect ke halaman program
+    router.push("/pages/program");
   };
 
+  // Options untuk dropdown
   const genderOptions = [
     { value: "laki-laki", label: "Laki-laki" },
     { value: "perempuan", label: "Perempuan" },
