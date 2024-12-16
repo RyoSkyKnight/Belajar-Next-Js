@@ -19,6 +19,16 @@ export default function Page() {
     gender: "",
     kesibukan: "",
     knowlcfrom: "",
+    cabang: "",
+    periode: "",
+    paket: "",
+    paketDetail: "",
+    diskon: "",
+    lokasijemput : "",
+    kendaraan: "",
+    pilihnkamar: "", 
+    tipekamar: "",
+    ketentuan: false,
   });
 
   // Ambil data dari sessionStorage jika ada
@@ -114,7 +124,8 @@ export default function Page() {
 
         {/* Select Gender dan Kesibukan */}
         <div className="flex flex-row space-x-4">
-          <div className="w-1/2">
+          <div className="w-1/2 flex flex-col space-y-2">
+          <Label htmlFor="gender" required>Jenis Kelamin :</Label>
             <Select
               name="gender"
               options={genderOptions}
@@ -123,7 +134,8 @@ export default function Page() {
               required
             />
           </div>
-          <div className="w-1/2">
+          <div className="w-1/2 flex flex-col space-y-2">
+            <Label htmlFor="kesibukan" required>Kesibukan :</Label>
             <Select
               name="kesibukan"
               options={kesibukanOptions}
