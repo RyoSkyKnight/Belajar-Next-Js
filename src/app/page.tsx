@@ -1,12 +1,12 @@
-"use client"; // Harus ditambahkan karena menggunakan hooks
+"use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Input from "./_components/_partials/input";
 import CustomLayout from "./_components/layout";
-import Label from "./_components/_partials/label";
 import Select from "./_components/_partials/select";
 import Button from "./_components/_partials/button";
+import Label from "./_components/_partials/label";
 
 export default function Page() {
   const router = useRouter();
@@ -21,54 +21,40 @@ export default function Page() {
     knowlcfrom: "",
   });
 
-  // Baca data dari localStorage saat halaman dimuat
+  // Ambil data dari sessionStorage jika ada
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedData = localStorage.getItem("formData");
-      if (savedData) {
-        setFormData(JSON.parse(savedData));
-      }
-    }
+    const savedData = sessionStorage.getItem("formData");
+    if (savedData) setFormData(JSON.parse(savedData));
   }, []);
 
-  // Handle perubahan input dan select
+  // Handle perubahan input
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     const updatedFormData = { ...formData, [name]: value };
     setFormData(updatedFormData);
 
-    // Simpan data ke localStorage setiap ada perubahan
-    localStorage.setItem("formData", JSON.stringify(updatedFormData));
+    // Simpan data di sessionStorage
+    sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
   };
 
-  // Handle submit form dengan POST
+  // Submit data ke API
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); // Mencegah reload halaman
-
+    e.preventDefault();
     try {
-      const response = await fetch("/api/program", {
+      // Kirim data ke API
+      await fetch("/api/program", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
-      if (response.ok) {
-        // Hapus data dari localStorage setelah submit
-        localStorage.removeItem("formData");
-
-        // Redirect ke halaman /pages/program jika sukses
-        router.push("/pages/program");
-      } else {
-        console.error("Gagal mengirim data form");
-      }
+      // Data juga sudah ada di sessionStorage, tinggal redirect
+      router.push("/pages/program");
     } catch (error) {
-      console.error("Terjadi kesalahan:", error);
+      console.error("Gagal mengirim data ke API", error);
     }
   };
 
-  // Data dropdown
   const genderOptions = [
     { value: "laki-laki", label: "Laki-laki" },
     { value: "perempuan", label: "Perempuan" },
@@ -81,9 +67,10 @@ export default function Page() {
   ];
 
   const knowLCFromOptions = [
-    { value: "instagram", label: "Instagram" },
+    { value: "google", label: "Google" },
     { value: "facebook", label: "Facebook" },
-    { value: "iklan", label: "Iklan" },
+    { value: "instagram", label: "Instagram" },
+    { value: "lainnya", label: "Lainnya" },
   ];
 
   return (
