@@ -88,7 +88,7 @@ const penumpangOptions = [
       mainline="Wah, dikit lagi nih! Langkah demi langkah menuju kesuksesan dimulai! 🚀"
       line="Ayo, kita taklukkan bahasa Inggris bareng-bareng! 💪 #KampungInggrisLC #DrivesYourSuccess"
     >
-      <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-6">
+      <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-4">
       <div className="flex flex-col space-y-2">
             <Label htmlFor="lokasijemput" required>Pilih Penjemputan :</Label>
             <Select
@@ -160,8 +160,8 @@ const penumpangOptions = [
 
           {/* Submit Button */}
                <div className="flex flex-col justify-center items-center">
-                 <p className="text-gray-300 text-sm mt-5">
-                 Pastikan anda telah memilih program anda dengan baik & benar sebelum lanjut!
+                 <p className="text-gray-300 text-sm mt-16 mb-2">
+                 Biaya penjemputan & kamar akan di tambahkan dengan biaya program sebelumnya!
                  </p>
                  <Button type="submit" className="w-full">Yuk Lanjut!</Button>
                </div>

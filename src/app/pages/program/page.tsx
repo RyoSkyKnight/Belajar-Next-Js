@@ -92,7 +92,7 @@ export default function ProgramPage() {
       mainline="Pilih paket program yang relevan biar makin jago! 🚀"
       line="Drives your success from here!✨ #KampungInggrisLC #BestEnvironmentForTheBestResult"
     >
-      <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-6">
+      <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-4">
 
         {/* Select Cabang dan Periode */}
         <div className="flex flex-row space-x-4">
@@ -158,7 +158,7 @@ export default function ProgramPage() {
         </div>
         <div className="flex flex-row justify-between">
 
-          <div className="flex flex-col space-y-2 w-1/2">
+          <div className="flex flex-col space-y-2 w-2/3">
             <Label htmlFor="diskon" >Kode Voucher :</Label>
             <Input
               type="text"
@@ -178,7 +178,7 @@ export default function ProgramPage() {
 
         {/* Submit Button */}
         <div className="flex flex-col justify-center items-center">
-          <p className="text-gray-300 text-sm mt-5">
+          <p className="text-gray-300 text-sm mt-16 mb-2">
             Pastikan anda telah memilih program anda dengan baik & benar sebelum lanjut!
           </p>
           <Button type="submit" className="w-full">Yuk Lanjut!</Button>

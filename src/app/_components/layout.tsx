@@ -25,8 +25,8 @@ export default function CustomLayout({
               <Image
                 src={logo}
                 alt="Logo"
-                width={200}
-                height={200}
+                width={150}
+                height={150}
                 className="mx-auto"
               />
 

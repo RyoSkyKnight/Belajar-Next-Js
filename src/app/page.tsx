@@ -82,7 +82,7 @@ export default function Page() {
       mainline="Langkah pertama untuk sukses dimulai di sini! 🚀"
       line="Let's conquer English together! 💪 #KampungInggrisLC #BestEnvironmentForTheBestResult"
     >
-      <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-6">
+      <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-4">
         {/* Input Nama */}
         <div className="flex flex-col space-y-2">
           <Label htmlFor="nama" required>Nama Lengkap :</Label>
@@ -160,7 +160,7 @@ export default function Page() {
 
         {/* Submit Button */}
         <div className="flex flex-col justify-center items-center">
-          <p className="text-gray-300 text-sm mt-5">
+          <p className="text-gray-300 text-sm mt-16 mb-2">
             Pastikan anda telah mengisi data diri dengan baik & benar sebelum lanjut!
           </p>
           <Button type="submit" className="w-full">Yuk Lanjut!</Button>
