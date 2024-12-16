@@ -7,15 +7,15 @@ const Navbar = () => {
 
     const navItems = [
         { label: 'Data Diri', path: '/' },
-        { label: 'Program', path: '/program' },
-        { label: 'Akomodasi', path: '/akomodasi' },
-        { label: 'Konfirmasi', path: '/konfirmasi' },
+        { label: 'Program', path: '/pages/program' },
+        { label: 'Akomodasi', path: '/pages/akomodasi' },
+        { label: 'Konfirmasi', path: '/pages/konfirmasi' },
     ];
 
     return (
-        <nav className="w-full">
-            <div className="max-w-7xl mx-auto">
-                <div className="flex flex-row  items-center justify-center gap-8 py-4 ">
+        <nav className="w-auto">
+            <div className="w-auto mx-auto">
+                <div className="w-auto flex flex-row  items-center justify-center lg:gap-6  gap-2 py-4 ">
                     {navItems.map((item) => (
                         <Link
                             key={item.path}

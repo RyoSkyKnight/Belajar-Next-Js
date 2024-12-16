@@ -26,7 +26,7 @@ export default function Button({
   `;
 
   const variants = {
-    primary: `bg-main-color text-white hover:bg-main-color/80 focus:ring-main-color`,
+    primary: `bg-main-color text-black hover:bg-main-color/80 focus:ring-main-color`,
     secondary: `bg-gray-500 text-white hover:bg-gray-600 focus:ring-gray-500`,
     outline: `border border-main-color text-main-color hover:bg-main-color/10 focus:ring-main-color`,
   };

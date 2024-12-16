@@ -1,13 +1,7 @@
 import Image from "next/image";
 import logo from "./_assets/logo.png";
 import Navbar from "./_partials/navbar";
-import type { Metadata } from "next";
 import "../globals.css";
-
-export const metadata: Metadata = {
-  title: "Registrasi Language Center",
-  description: "Registrasi Language Center",
-};
 
 interface CustomLayoutProps {
   children: React.ReactNode;
@@ -23,9 +17,9 @@ export default function CustomLayout({
   return (
     <html lang="en">
       <body>
-        <div className="flex flex-row w-full h-screen bg-main-color">
+        <div className="flex flex-row w-full h-auto lg:h-screen bg-main-color">
           {/* Container */}
-          <div className="lg:w-[60%] w-full h-full bg-white shadow-lg lg:rounded-tr-[40px] lg:rounded-br-[40px]">
+          <div className="lg:w-[55%] w-full h-full bg-white shadow-lg lg:rounded-tr-[40px] lg:rounded-br-[40px]">
             <div className="mx-10 my-10">
               {/* Logo */}
               <Image
@@ -50,8 +44,10 @@ export default function CustomLayout({
           </div>
 
           {/* Side Content */}
-          <div className="sm:hidden lg:flex items-center justify-center flex-1">
-            <p className="text-2xl">Side Content</p>
+          <div className="lg:block hidden">
+            <div className="lg:flex items-center justify-center flex-1">
+                <p className="text-2xl">Side Content</p>
+            </div>
           </div>
         </div>
       </body>
