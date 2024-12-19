@@ -76,9 +76,10 @@ export default function ProgramPage() {
   ];
 
   const paketTabList = [
-    { value: "paket1", label: "Paket 1" },
-    { value: "paket2", label: "Paket 2" },
-    { value: "paket3", label: "Paket 3" },
+    { value: "intensive", label: "Intensive" },
+    { value: "english-master", label: "English Master" },
+    { value: "desember-ceria", label: "Desember Ceria" },
+    { value: "private", label: "Private" },
   ];
 
   const paketDurasiTabList = [
@@ -89,8 +90,8 @@ export default function ProgramPage() {
 
   return (
     <CustomLayout
-      mainline="Pilih paket program yang relevan biar makin jago! 🚀"
-      line="Drives your success from here!✨ #KampungInggrisLC #BestEnvironmentForTheBestResult"
+      mainline="Pilih paket program yang relevan biar kamu makin jago! 🚀"
+      line="Drives your success from here!✨ #KampungInggrisLC #BestEnvironmentForTheBestResult" 
     >
       <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-4">
 

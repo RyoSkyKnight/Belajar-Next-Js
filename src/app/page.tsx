@@ -80,7 +80,7 @@ export default function Page() {
   return (
     <CustomLayout
       mainline="Langkah pertama untuk sukses dimulai di sini! 🚀"
-      line="Let's conquer English together! 💪 #KampungInggrisLC #BestEnvironmentForTheBestResult"
+      line="Let's conquer English together! 💪 #KampungInggrisLC #BestEnvironmentForTheBestResult #RaihSuksesMuBersamaLC"
     >
       <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-4">
         {/* Input Nama */}

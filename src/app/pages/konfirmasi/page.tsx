@@ -17,7 +17,7 @@ export default function KonfirmasiPage() {
   }, []);
 
   return (
-    <CustomLayout mainline="Tinggal selangkah lagi menuju kesuksesan! 🚀" line="Konfirmasi dulu biar gak ada kekeliruan nanti <3 ! 😍#KampungInggrisLC #BelajarAsikDenganHasilMaksimal"
+    <CustomLayout mainline="Tinggal selangkah lagi menuju kesuksesan! 🚀" line="Konfirmasi data kamu biar gak ada kekeliruan nanti <3 ! 😍#KampungInggrisLC #BelajarAsikDenganHasilMaksimal"
 >
         <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Konfirmasi Page</h1>

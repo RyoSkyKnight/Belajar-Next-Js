@@ -41,6 +41,11 @@ export default function ProgramPage() {
     setFormData(updatedFormData);
     sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
   };
+  const handleTipeTabClick = (value: string | number) => {
+    const updatedFormData = { ...formData, tipekamar : value };
+    setFormData(updatedFormData);
+    sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
+  };
 
   // Handle submit form
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -78,7 +83,7 @@ const penumpangOptions = [
     { value: "noncamp", label: "Non Camp" },
   ];
 
-  const tipeKamarOptions = [
+  const tipeKamar = [
     { value: "AC", label: "AC" },
     { value: "nonAC", label: "NON AC" },
   ];
@@ -149,13 +154,18 @@ const penumpangOptions = [
 
           <div className="flex flex-col space-y-2">
             <Label htmlFor="tipekamar" required>Pilih Tipe Kamar :</Label>
-            <Select
-              name="tipekamar"
-              options={tipeKamarOptions}
-              value={formData.tipekamar || ""}
-              onChange={handleChange}
-              required
-            />
+            <ul className="flex flex-row space-x-4">
+
+{tipeKamar.map((item) => (
+  <TabList
+    key={item.value}
+    label={item.label}
+    value={item.value}
+    onClick={handleTipeTabClick}
+    isActive={formData.tipekamar === item.value}
+  />
+))}
+</ul>
           </div>
 
           {/* Submit Button */}
