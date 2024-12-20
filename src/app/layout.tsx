@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -13,16 +11,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const router = useRouter();
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedData = sessionStorage.getItem("formData");
-      if (!savedData) {
-        router.push("/");
-      }
-    }
-  }, [router]);
   return (
     <html lang="en">
       <body>

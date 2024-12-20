@@ -3,6 +3,8 @@ import logo from "./_assets/logolc.png";
 import jk from "./_assets/jk.png";
 import tag from "./_assets/logo.png";
 import Navbar from "./_partials/navbar";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import "../globals.css";
 
 interface CustomLayoutProps {
@@ -16,6 +18,18 @@ export default function CustomLayout({
   mainline,
   line,
 }: CustomLayoutProps) {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedData = sessionStorage.getItem("formData");
+      if (!savedData) {
+        // Redirect to home page if session data is not found
+        router.push("/");
+      }
+    }
+  }, [router]);
+
   return (
     <div className="flex flex-row w-full h-auto lg:h-screen bg-img">
       {/* Container */}
@@ -44,30 +58,22 @@ export default function CustomLayout({
       </div>
 
       {/* Side Content */}
-
-      <div className="lg:block hidden w-[40%] h-full relative">
-        <div className="w-full h-full">
-          <div className="lg:flex items-center justify-center w-full h-full relative">
-            {/* Background image */}
-            <Image
-              src={jk}
-              alt="Side Image"
-              width={900} // Use appropriate width
-              height={600} // Use appropriate height
-              className="object-cover w-full" // Optional for styling
-            />
-            {/* Tag image */}
-            <Image
-              src={tag}
-              alt="Tag Image"
-              width={400} // Use appropriate width
-              height={100} // Use appropriate height
-              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[100]" // Centering and layering
-            />
-          </div>
+      <div className="lg:block hidden h-full relative">
+        <div className="lg:flex items-center justify-center w-full h-full relative">
+          {/* Background image */}
+          <Image
+            src={jk}
+            alt="Side Image"
+            className="object-cover w-full"
+          />
+          {/* Tag image */}
+          <Image
+            src={tag}
+            alt="Tag Image"
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[100]"
+          />
         </div>
       </div>
-
     </div>
   );
 }
