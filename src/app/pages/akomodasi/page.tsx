@@ -6,8 +6,7 @@ import Button from "@/app/_components/_partials/button";
 import Label from "@/app/_components/_partials/label";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import TabList from "@/app/_components/_partials/tablist";
-
+import Input from "@/app/_components/_partials/input";
 
 interface FormData {
   [key: string]: string | number;
@@ -34,23 +33,9 @@ export default function ProgramPage() {
     sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
   };
 
-  // Handle perubahan input dan tablist
-  // Handle tab paket
-  const handleTabClick = (value: string | number) => {
-    const updatedFormData = { ...formData, pilihankamar : value };
-    setFormData(updatedFormData);
-    sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
-  };
-  const handleTipeTabClick = (value: string | number) => {
-    const updatedFormData = { ...formData, tipekamar : value };
-    setFormData(updatedFormData);
-    sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
-  };
-
   // Handle submit form
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
 
     // Simpan data di sessionStorage
     sessionStorage.setItem("formData", JSON.stringify(formData));
@@ -61,10 +46,9 @@ export default function ProgramPage() {
 
   // Options untuk dropdown
   const lokasiJemputOptions = [
-    { value: "pare", label: "Pare" },
-    { value: "serang", label: "Serang" },
-    { value: "banten", label: "Banten" },
-    { value: "jogja", label: "Jogja" },
+    { value: "bandara_dhoho_kediri", label: "Bandara Dhoho Kediri" },
+    { value: "bandara_juanda_surabaya", label: "Bandara Juanda Surabaya" },
+    { value: "stasiun_jombang", label: "Stasiun Jombang" },
   ];
 
   const kendaraanOptions = [
@@ -72,20 +56,10 @@ export default function ProgramPage() {
     { value: "motor", label: "Motor" },
   ];
 
-const penumpangOptions = [
+  const penumpangOptions = [
     { value: "1", label: "1 Penumpang" },
     { value: "2", label: "2 Penumpang" },
     { value: "3", label: "3 Penumpang" },
-  ];
-
-  const pilihanKamar = [
-    { value: "camp", label: "Camp" },
-    { value: "noncamp", label: "Non Camp" },
-  ];
-
-  const tipeKamar = [
-    { value: "AC", label: "AC" },
-    { value: "nonAC", label: "NON AC" },
   ];
 
   return (
@@ -93,23 +67,23 @@ const penumpangOptions = [
       mainline="Wah, dikit lagi nih! Langkah demi langkah menuju kesuksesan dimulai! 🚀"
       line="Ayo, kita taklukkan bahasa Inggris bareng-bareng! 💪 #KampungInggrisLC #DrivesYourSuccess"
     >
-      <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-4">
-      <div className="flex flex-col space-y-2">
-            <Label htmlFor="lokasijemput" required>Pilih Penjemputan :</Label>
-            <Select
-              name="lokasijemput"
-              options={lokasiJemputOptions}
-              value={formData.lokasijemput || ""}
-              onChange={handleChange}
-              required
-            />
-          </div>
+       <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-10 lg:space-y-24">
+       <div className="flex flex-col space-y-4 min-h-[320px] h-full">
 
+        <div className="flex flex-col space-y-2">
+          <Label htmlFor="lokasijemput" required>Pilih Penjemputan :</Label>
+          <Select
+            name="lokasijemput"
+            options={lokasiJemputOptions}
+            value={formData.lokasijemput || ""}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
         {/* Select Cabang dan Periode */}
-        <div className="flex flex-row space-x-4">
-
-          <div className="w-1/2 flex flex-col space-y-2">
+        <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+          <div className="w-full md:w-1/2 flex flex-col space-y-2">
             <Label htmlFor="kendaraan" required>Pilih Tipe Kendaraan :</Label>
             <Select
               name="kendaraan"
@@ -120,7 +94,7 @@ const penumpangOptions = [
             />
           </div>
 
-          <div className="w-1/2 flex flex-col space-y-2">
+          <div className="w-full md:w-1/2 flex flex-col space-y-2">
             <Label htmlFor="penumpang" required>Banyak Penumpang :</Label>
             <Select
               name="penumpang"
@@ -130,51 +104,34 @@ const penumpangOptions = [
               required
             />
           </div>
-
         </div>
 
-  
-
-          <div className="w-full flex flex-col space-y-2">
-            <Label htmlFor="paket" required>Pilih Kamar :</Label>
-
-            <ul className="flex flex-row space-x-4">
-
-              {pilihanKamar.map((item) => (
-                <TabList
-                  key={item.value}
-                  label={item.label}
-                  value={item.value}
-                  onClick={handleTabClick}
-                  isActive={formData.pilihankamar === item.value}
-                />
-              ))}
-            </ul>
+        <div className="flex flex-col md:flex-row justify-between w-full space-y-4 md:space-y-0">
+          <div className="flex flex-col space-y-2 w-full md:w-1/3">
+            <Label htmlFor="diskon">Kode Voucher :</Label>
+            <Input
+              type="text"
+              name="diskon"
+              placeholder="Ketikan disini (jika ada)"
+              value={formData.diskon || ""}
+              onChange={handleChange}
+            />
           </div>
 
-          <div className="flex flex-col space-y-2">
-            <Label htmlFor="tipekamar" required>Pilih Tipe Kamar :</Label>
-            <ul className="flex flex-row space-x-4">
-
-{tipeKamar.map((item) => (
-  <TabList
-    key={item.value}
-    label={item.label}
-    value={item.value}
-    onClick={handleTipeTabClick}
-    isActive={formData.tipekamar === item.value}
-  />
-))}
-</ul>
+          <div className="flex flex-col justify-center w-full lg:w-1/4 md:w-1/4">
+            <h2 className="text-center text-sm pb-2 lg:pt-0 pt-2">Total Harga :</h2>
+            <h2 className="bg-bill text-center text-white py-2 px-1 rounded-[10px]">Rp 900.000</h2>
           </div>
+        </div>
 
-          {/* Submit Button */}
-               <div className="flex flex-col justify-center items-center">
-                 <p className="text-gray-300 text-sm mt-16 mb-2">
-                 Biaya penjemputan & kamar akan di tambahkan dengan biaya program sebelumnya!
-                 </p>
-                 <Button type="submit" className="w-full">Yuk Lanjut!</Button>
-               </div>
+  </div>
+        {/* Submit Button */}
+        <div className="flex flex-col justify-center items-center">
+          <p className="text-gray-300 text-sm text-center mb-2">
+            Biaya penjemputan & kamar akan di tambahkan dengan biaya program sebelumnya!
+          </p>
+          <Button type="submit" className="w-full">Yuk Lanjut!</Button>
+        </div>
       </form>
     </CustomLayout>
   );

@@ -12,6 +12,7 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
         'main-color': '#FACC14', // Warna utama yang ditambahkan
+        'bill': '#5CB338'
       },
     },
   },

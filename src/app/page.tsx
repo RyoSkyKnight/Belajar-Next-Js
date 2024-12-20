@@ -26,7 +26,6 @@ export default function Page() {
     diskon: "",
     lokasijemput : "",
     kendaraan: "",
-    pilihnkamar: "", 
     tipekamar: "",
     ketentuan: false,
   });
@@ -82,7 +81,8 @@ export default function Page() {
       mainline="Langkah pertama untuk sukses dimulai di sini! 🚀"
       line="Let's conquer English together! 💪 #KampungInggrisLC #BestEnvironmentForTheBestResult #RaihSuksesMuBersamaLC"
     >
-      <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-4">
+      <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-10 lg:space-y-20">
+      <div className="flex flex-col space-y-4 min-h-[320px] h-full">
         {/* Input Nama */}
         <div className="flex flex-col space-y-2">
           <Label htmlFor="nama" required>Nama Lengkap :</Label>
@@ -97,8 +97,8 @@ export default function Page() {
         </div>
 
         {/* Input Email dan Nomor WhatsApp */}
-        <div className="flex flex-row space-x-4">
-          <div className="flex flex-col space-y-2 w-1/2">
+        <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+          <div className="flex flex-col space-y-2 w-full md:w-1/2">
             <Label htmlFor="email" required>Email :</Label>
             <Input
               type="email"
@@ -109,7 +109,7 @@ export default function Page() {
               required
             />
           </div>
-          <div className="flex flex-col space-y-2 w-1/2">
+          <div className="flex flex-col space-y-2 w-full md:w-1/2">
             <Label htmlFor="nomor" required>Nomor WhatsApp :</Label>
             <Input
               type="text"
@@ -123,9 +123,9 @@ export default function Page() {
         </div>
 
         {/* Select Gender dan Kesibukan */}
-        <div className="flex flex-row space-x-4">
-          <div className="w-1/2 flex flex-col space-y-2">
-          <Label htmlFor="gender" required>Jenis Kelamin :</Label>
+        <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+          <div className="w-full md:w-1/2 flex flex-col space-y-2">
+            <Label htmlFor="gender" required>Jenis Kelamin :</Label>
             <Select
               name="gender"
               options={genderOptions}
@@ -134,7 +134,7 @@ export default function Page() {
               required
             />
           </div>
-          <div className="w-1/2 flex flex-col space-y-2">
+          <div className="w-full md:w-1/2 flex flex-col space-y-2">
             <Label htmlFor="kesibukan" required>Kesibukan :</Label>
             <Select
               name="kesibukan"
@@ -157,13 +157,14 @@ export default function Page() {
             required
           />
         </div>
+      </div>
 
         {/* Submit Button */}
-        <div className="flex flex-col justify-center items-center">
-          <p className="text-gray-300 text-sm mt-16 mb-2">
+        <div className="flex flex-col justify-center items-center ">
+          <p className="text-gray-300 text-sm text-center mb-2">
             Pastikan anda telah mengisi data diri dengan baik & benar sebelum lanjut!
           </p>
-          <Button type="submit" className="w-full">Yuk Lanjut!</Button>
+          <Button type="submit" className="w-full lg:w-full">Yuk Lanjut!</Button>
         </div>
       </form>
     </CustomLayout>

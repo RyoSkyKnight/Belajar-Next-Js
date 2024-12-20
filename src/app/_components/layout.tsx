@@ -1,5 +1,7 @@
 import Image from "next/image";
-import logo from "./_assets/logo.png";
+import logo from "./_assets/logolc.png";
+import jk from "./_assets/jk.png";
+import tag from "./_assets/logo.png";
 import Navbar from "./_partials/navbar";
 import "../globals.css";
 
@@ -15,43 +17,58 @@ export default function CustomLayout({
   line,
 }: CustomLayoutProps) {
   return (
-    <html lang="en">
-      <body>
-        <div className="flex flex-row w-full h-auto lg:h-screen bg-main-color">
-          {/* Container */}
-          <div className="lg:w-[55%] w-full h-full bg-white shadow-lg lg:rounded-tr-[40px] lg:rounded-br-[40px]">
-            <div className="mx-10 my-10">
-              {/* Logo */}
-              <Image
-                src={logo}
-                alt="Logo"
-                width={150}
-                height={150}
-                className="mx-auto"
-              />
+    <div className="flex flex-row w-full h-auto lg:h-screen bg-img">
+      {/* Container */}
+      <div className="lg:w-[60%] md:w-full w-full h-full bg-white shadow-lg lg:rounded-tr-[40px] lg:rounded-br-[40px]">
+        <div className="mx-10 my-10">
+          {/* Logo */}
+          <Image
+            src={logo}
+            alt="Logo"
+            width={150}
+            height={150}
+            className="mx-auto"
+          />
 
-              {/* Tagline */}
-              <TagDescription mainline={mainline} line={line} />
+          {/* Tagline */}
+          <TagDescription mainline={mainline} line={line} />
 
-                {/* Navbar */} 
-                <Navbar />
+          {/* Navbar */}
+          <Navbar />
 
-              {/* Main Content */}
-              <div className="mt-10">
-                {children}
-              </div>
-            </div>
-          </div>
-
-          {/* Side Content */}
-          <div className="lg:block hidden">
-            <div className="lg:flex items-center justify-center flex-1">
-                <p className="text-2xl">Side Content</p>
-            </div>
+          {/* Main Content */}
+          <div className="mt-10">
+            {children}
           </div>
         </div>
-      </body>
-    </html>
+      </div>
+
+      {/* Side Content */}
+
+      <div className="lg:block hidden w-[40%] h-full relative">
+        <div className="w-full h-full">
+          <div className="lg:flex items-center justify-center w-full h-full relative">
+            {/* Background image */}
+            <Image
+              src={jk}
+              alt="Side Image"
+              width={900} // Use appropriate width
+              height={600} // Use appropriate height
+              className="object-cover w-full" // Optional for styling
+            />
+            {/* Tag image */}
+            <Image
+              src={tag}
+              alt="Tag Image"
+              width={400} // Use appropriate width
+              height={100} // Use appropriate height
+              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[100]" // Centering and layering
+            />
+          </div>
+        </div>
+      </div>
+
+    </div>
   );
 }
 
