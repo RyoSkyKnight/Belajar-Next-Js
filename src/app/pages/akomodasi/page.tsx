@@ -67,7 +67,7 @@ export default function ProgramPage() {
       mainline="Wah, dikit lagi nih! Langkah demi langkah menuju kesuksesan dimulai! 🚀"
       line="Ayo, kita taklukkan bahasa Inggris bareng-bareng! 💪 #KampungInggrisLC #DrivesYourSuccess"
     >
-       <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-10 lg:space-y-24">
+       <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-10 lg:space-y-20">
        <div className="flex flex-col space-y-4 min-h-[320px] h-full">
 
         <div className="flex flex-col space-y-2">
@@ -127,7 +127,7 @@ export default function ProgramPage() {
   </div>
         {/* Submit Button */}
         <div className="flex flex-col justify-center items-center">
-          <p className="text-gray-300 text-sm text-center mb-2">
+          <p className="text-gray-500 text-sm text-center pb-4">
             Biaya penjemputan & kamar akan di tambahkan dengan biaya program sebelumnya!
           </p>
           <Button type="submit" className="w-full">Yuk Lanjut!</Button>

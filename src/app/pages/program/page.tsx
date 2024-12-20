@@ -43,7 +43,7 @@ export default function ProgramPage() {
 
   // Handle tab durasi paket
   const handleTabDurasiClick = (value: string | number) => {
-    const updatedFormData = { ...formData, paketDetail: value };
+    const updatedFormData = { ...formData, paketdetail: value };
     setFormData(updatedFormData);
     sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
   };
@@ -117,7 +117,7 @@ export default function ProgramPage() {
       mainline="Pilih paket program yang relevan biar kamu makin jago! 🚀"
       line="Drives your success from here!✨ #KampungInggrisLC #BestEnvironmentForTheBestResult"
     >
-       <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-10 lg:space-y-24">
+       <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-10 lg:space-y-20">
        <div className="flex flex-col space-y-4 min-h-[320px] h-full">
 
         {/* Select Cabang dan Periode */}
@@ -181,7 +181,7 @@ export default function ProgramPage() {
                   label={item.label}
                   value={item.value}
                   onClick={handleTabDurasiClick}
-                  isActive={formData.paketDetail === item.value}
+                  isActive={formData.paketdetail === item.value}
                 />
               ))}
             </ul>
@@ -221,7 +221,7 @@ export default function ProgramPage() {
 </div>
         {/* Submit Button */}
         <div className="flex flex-col justify-center items-center">
-          <p className="text-gray-300 text-sm text-center mb-2">
+          <p className="text-gray-500 text-sm text-center pb-4">
             Pastikan anda telah memilih program anda dengan baik & benar sebelum lanjut!
           </p>
           <Button type="submit" className="w-full">Yuk Lanjut!</Button>

@@ -22,7 +22,7 @@ export default function Page() {
     cabang: "",
     periode: "",
     paket: "",
-    paketDetail: "",
+    paketdetail: "",
     diskon: "",
     lokasijemput : "",
     kendaraan: "",
@@ -161,7 +161,7 @@ export default function Page() {
 
         {/* Submit Button */}
         <div className="flex flex-col justify-center items-center ">
-          <p className="text-gray-300 text-sm text-center mb-2">
+          <p className="text-gray-500 text-sm text-center pb-4">
             Pastikan anda telah mengisi data diri dengan baik & benar sebelum lanjut!
           </p>
           <Button type="submit" className="w-full lg:w-full">Yuk Lanjut!</Button>
