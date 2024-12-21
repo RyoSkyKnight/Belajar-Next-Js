@@ -37,7 +37,7 @@ const Navbar = () => {
             parsedData.cabang &&
               parsedData.periode &&
               parsedData.paket &&
-              parsedData.paketDetail &&
+              parsedData.paketdetail &&
               parsedData.tipekamar
           ),
           akomodasi: Boolean(

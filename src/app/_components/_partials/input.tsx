@@ -31,6 +31,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       focus:ring-2
       focus:ring-opacity-50
       text-gray-400
+      text-black
     `;
 
     // Variasi gaya

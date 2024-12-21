@@ -18,13 +18,12 @@ export default function Select({
       onChange={onChange}
       className={`
         w-full
+        p-2
         h-10
         border border-black border-opacity-40
         focus:ring-black
         rounded-[10px]
-        px-3
-        text-gray-400
-        py-2
+        text-black
         focus:outline-none
         focus:ring-2
         focus:ring-opacity-50
