@@ -107,118 +107,132 @@ export default function ProgramPage() {
   ];
 
   const tipeKamar = [
-    { value: "camp_grade_1", label: "Camp Grade 1" },
-    { value: "camp_grade_2", label: "Camp Grade 2" },
-    { value: "non_camp", label: "Non-Camp" },
+    { value: "camp_grade_1", label: "Camp Grade 1", desc: "Kamar ber-AC, 2 tempat tidur, kamar mandi dalam" },
+    { value: "camp_grade_2", label: "Camp Grade 2", desc: "Kamar ber-AC, 3 tempat tidur, kamar mandi dalam" },
+    { value: "non_camp", label: "Non-Camp", desc: "" },
   ];
+
+  const [selectedTipe, setSelectedTipe] = useState<string | null>(null);
 
   return (
     <CustomLayout
       mainline="Pilih paket program yang relevan biar kamu makin jago! 🚀"
-      line="Drives your success from here!✨ #KampungInggrisLC #BestEnvironmentForTheBestResult #TempatBealajarAsikDenganHasilTerbaik"
+      line="Drives your success from here!✨ #KampungInggrisLC #BestEnvironmentForTheBestResult"
     >
-       <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-10 lg:space-y-20">
-       <div className="flex flex-col space-y-4 min-h-[320px] h-full">
+      <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-10 lg:space-y-20">
+        <div className="flex flex-col space-y-4 min-h-[320px] h-full">
 
-        {/* Select Cabang dan Periode */}
-        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+          {/* Select Cabang dan Periode */}
+          <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
 
 
-          <div className="w-full md:w-1/2 flex flex-col space-y-2">
-            <Label htmlFor="cabang" required>Pilih Cabang :</Label>
-            <Select
-              name="cabang"
-              options={cabangOptions}
-              value={formData.cabang || ""}
-              onChange={handleChange}
-              required
-            />
+            <div className="w-full lg:w-1/2 flex flex-col space-y-2">
+              <Label htmlFor="cabang" required>Pilih Cabang :</Label>
+              <Select
+                name="cabang"
+                options={cabangOptions}
+                value={formData.cabang || ""}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="w-full lg:w-1/2 flex flex-col space-y-2">
+              <Label htmlFor="periode" required>Periode :</Label>
+              <Select
+                name="periode"
+                options={periodeOptions}
+                value={formData.periode || ""}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
           </div>
 
-          <div className="w-full md:w-1/2 flex flex-col space-y-2">
-            <Label htmlFor="periode" required>Periode :</Label>
-            <Select
-              name="periode"
-              options={periodeOptions}
-              value={formData.periode || ""}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-        </div>
-
-        <div className="w-full flex flex-col space-y-2">
-          <Label htmlFor="paket" required>Pilih Paket :</Label>
-
-          <div className="lg:overflow-y-auto scroll-hidden">
-
-            <ul className="lg:w-max w-full lg:flex lg:flex-row lg:space-x-4 grid :grid-cols-auto-fit grid-cols-2 gap-4 lg:gap-0">
-
-              {paketTabList.map((item) => (
-                <TabList
-                  key={item.value}
-                  label={item.label}
-                  value={item.value}
-                  onClick={handleTabClick}
-                  isActive={formData.paket === item.value}
-                />
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        <div className="w-full flex flex-col space-y-2">
-          <Label htmlFor="paketDetail" required>Pilih Durasi Paket :</Label>
-
-          <div className="overflow-y-auto scroll-hidden">
-
-            <ul className="w-max flex flex-row space-x-4">
-
-              {paketDurasiTabList.map((item) => (
-                <TabList
-                  key={item.value}
-                  label={item.label}
-                  value={item.value}
-                  onClick={handleTabDurasiClick}
-                  isActive={formData.paketdetail === item.value}
-                />
-              ))}
-            </ul>
-          </div>
-
-        </div>
-
-        <div className="flex flex-col md:flex-row justify-between w-full space-y-4 md:space-y-0">
-
-          <div className="flex flex-col space-y-2 w-full md:w-1/2">
-            <Label htmlFor="tipekamar" required>Pilih Tipe Kamar :</Label>
+          <div className="w-full flex flex-col space-y-2">
+            <Label htmlFor="paket" required>Pilih Paket :</Label>
 
             <div className="lg:overflow-y-auto scroll-hidden">
 
               <ul className="lg:w-max w-full lg:flex lg:flex-row lg:space-x-4 grid :grid-cols-auto-fit grid-cols-2 gap-4 lg:gap-0">
 
-                {tipeKamar.map((item) => (
+                {paketTabList.map((item) => (
                   <TabList
                     key={item.value}
                     label={item.label}
                     value={item.value}
-                    onClick={handleTipeTabClick}
-                    isActive={formData.tipekamar === item.value}
+                    onClick={handleTabClick}
+                    isActive={formData.paket === item.value}
                   />
                 ))}
               </ul>
             </div>
+          </div>
+
+          <div className="w-full flex flex-col space-y-2">
+            <Label htmlFor="paketDetail" required>Pilih Durasi Paket :</Label>
+
+            <div className="overflow-y-auto scroll-hidden">
+
+              <ul className="w-max flex flex-row space-x-4">
+
+                {paketDurasiTabList.map((item) => (
+                  <TabList
+                    key={item.value}
+                    label={item.label}
+                    value={item.value}
+                    onClick={handleTabDurasiClick}
+                    isActive={formData.paketdetail === item.value}
+                  />
+
+                ))}
+              </ul>
+            </div>
+
 
           </div>
 
-          <div className="flex flex-col justify-center w-full lg:w-1/4 md:w-1/4">
-          <h2 className="text-center text-black text-sm pb-2 lg:pt-0 pt-2">Total Harga :</h2>
-          <h2 className="bg-bill text-center text-white py-2 px-1 rounded-[10px]">Rp 9.000.000</h2>
-          </div>
+          <div className="flex flex-col lg:flex-row justify-between w-full space-y-4 lg:space-y-0">
 
+            <div className="flex flex-col space-y-2 w-full lg:w-1/2">
+              <Label htmlFor="tipekamar" required>Pilih Tipe Kamar :</Label>
+
+              <div className="lg:overflow-y-auto scroll-hidden">
+                <ul className="lg:w-max w-full lg:flex lg:flex-row lg:space-x-4 grid grid-cols-2 gap-4 lg:gap-0">
+                  {tipeKamar.map((item) => (
+                    <div key={item.value}>
+                      <TabList
+                        label={item.label}
+                        value={item.value}
+                        onClick={(value) => {
+                          handleTipeTabClick(value);
+                          setSelectedTipe(value as string);
+                        }}
+                        isActive={formData.tipekamar === item.value}
+                      />
+                    </div>
+                  ))}
+                </ul>
+                  {/* Display description in one place */}
+              {selectedTipe && (
+                <div className="lg:absolute lg:w-1/2 w-auto h-auto pt-4">
+                  <p className="lg:text-left text-center text-xs text-gray-400">
+                    {tipeKamar.find((item) => item.value === selectedTipe)?.desc || "-"}
+                  </p>
+                </div>
+              )}
+              </div>
+
+            </div>
+
+            <div className="flex flex-col justify-center w-full lg:pt-0 lg:w-1/4">
+              <h2 className="text-center text-black text-sm pb-2 lg:pt-0 pt-2">Total Harga :</h2>
+              <h2 className="bg-bill text-center text-white py-2 px-1 rounded-[10px]">Rp 9.000.000</h2>
+            </div>
+
+          </div>
         </div>
-</div>
         {/* Submit Button */}
         <div className="flex flex-col justify-center items-center">
           <p className="text-gray-500 text-sm text-center pb-4">

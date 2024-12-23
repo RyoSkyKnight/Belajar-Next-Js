@@ -26,7 +26,7 @@ export default function KonfirmasiPage() {
   return (
     <CustomLayout
       mainline="Tinggal selangkah lagi menuju kesuksesan! 🚀"
-      line="Konfirmasi dulu biar gak ada kekeliruan nanti {'<3'} ! 😍 #KampungInggrisLC #BelajarAsikDenganHasilMaksimal"
+      line="Konfirmasi dulu biar gak ada kekeliruan nanti {'<3'} ! 😍 #InggrisItuSeru #BelajarSeruLC"
     >
       {/* Main Content */}
       <div className="w-full mx-auto rounded-3xl lg:border lg:border-gray-400 bg-white p-2 lg:py-3 lg:px-6 h-auto">

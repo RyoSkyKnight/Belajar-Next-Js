@@ -65,7 +65,7 @@ export default function ProgramPage() {
   return (
     <CustomLayout
       mainline="Wah, dikit lagi nih! Langkah demi langkah menuju kesuksesan dimulai! 🚀"
-      line="Ayo, kita taklukkan bahasa Inggris bareng-bareng! 💪 #KampungInggrisLC #DrivesYourSuccess #BoostYourEnglishWithLC"
+      line="Ayo, kita taklukkan bahasa Inggris bareng-bareng! 💪 #DrivesYourSuccess #BoostYourEnglishWithLC"
     >
        <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-10 lg:space-y-20">
        <div className="flex flex-col space-y-4 min-h-[320px] h-full">

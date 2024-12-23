@@ -31,7 +31,7 @@ export default function CustomLayout({
   return (
     <div className="flex flex-row w-full h-auto lg:h-screen bg-img">
       {/* Container */}
-      <div className="lg:w-[60%] md:w-full w-full h-full bg-white shadow-lg lg:rounded-tr-[40px] lg:rounded-br-[40px]">
+      <div className="lg:w-[60%] w-[100%] h-full bg-white shadow-lg lg:rounded-tr-[40px] lg:rounded-br-[40px] items-center justify-center align-middle">
         <div className="mx-10 my-5">
           {/* Logo */}
           <Image
@@ -43,7 +43,7 @@ export default function CustomLayout({
           />
 
           {/* Tagline */}
-          <TagDescription mainline={mainline} line={line} />
+          <TagDescription mainline={mainline} line={line}/>
 
           {/* Navbar */}
           <Navbar />
@@ -93,8 +93,8 @@ function TagDescription({
   line: string;
 }) {
   return (
-    <div className="my-4 text-center w-full">
-      <p className="font-bold text-black">{mainline} <span> <br />  </span> <span className="text-gray-500 font-normal">{line}</span> </p>
+    <div className="my-4 text-center w-full mx-auto">
+      <p className="font-bold text-black lg:text-base text-sm text-center">{mainline} <span> <br />  </span> <span className="text-gray-500 font-normal lg:text-base text-xs">{line}</span> </p>
     </div>
   );
 }

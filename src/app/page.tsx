@@ -79,7 +79,7 @@ export default function Page() {
   return (
     <CustomLayout
       mainline="Langkah pertama untuk sukses dimulai di sini! 🚀"
-      line="Let's conquer English together! 💪 #KampungInggrisLC #BestEnvironmentForTheBestResult #RaihSuksesMuBersamaLC"
+      line="Let's conquer English together! 💪 #KampungInggrisLC #RaihSuksesMuBersamaLC"
     >
       <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-10 lg:space-y-20">
       <div className="flex flex-col space-y-4 min-h-[320px] h-full">
