@@ -19,13 +19,11 @@ const Navbar = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      // Get data from sessionStorage
       const savedData = sessionStorage.getItem("formData");
       if (savedData) {
         const parsedData = JSON.parse(savedData);
         setFormData(parsedData);
 
-        // Validate steps
         setCompletedSteps({
           dataDiri: Boolean(
             parsedData.nama &&
@@ -57,13 +55,13 @@ const Navbar = () => {
       label: "Data Diri",
       path: "/",
       step: "dataDiri",
-      enabled: true, // Always enabled
+      enabled: true,
     },
     {
       label: "Program",
       path: "/pages/program",
       step: "program",
-      enabled: completedSteps.dataDiri, // Enabled only if Data Diri is completed
+      enabled: completedSteps.dataDiri,
     },
     ...(formData?.cabang === "PARE - JATIM"
       ? [
@@ -71,7 +69,7 @@ const Navbar = () => {
             label: "Akomodasi",
             path: "/pages/akomodasi",
             step: "akomodasi",
-            enabled: completedSteps.program, // Enabled only if Program is completed
+            enabled: completedSteps.program,
           },
         ]
       : []),
@@ -81,8 +79,8 @@ const Navbar = () => {
       step: "konfirmasi",
       enabled:
         formData?.cabang === "PARE - JATIM"
-          ? completedSteps.akomodasi // If "PARE - JATIM", depends on Akomodasi
-          : completedSteps.program, // Otherwise, depends on Program
+          ? completedSteps.akomodasi
+          : completedSteps.program,
     },
   ];
 
@@ -91,15 +89,13 @@ const Navbar = () => {
       <div className="flex items-center justify-center -space-x-2">
         {navItems.map((item, index) => (
           <div key={item.path} className="flex items-center">
-            {/* Step Item */}
-            <div className="flex flex-col items-center">
+            <div className="relative flex flex-col items-center group">
               <Link
                 href={item.enabled ? item.path : "#"}
                 className={`relative flex flex-col items-center gap-2 transition-all text-center ${
                   !item.enabled ? "cursor-not-allowed opacity-50" : ""
                 }`}
               >
-                {/* Step Circle */}
                 <div
                   className={`lg:w-3.5 lg:h-3.5 w-5 h-5 rounded-full flex items-center justify-center border-2 transition-all ${
                     item.enabled
@@ -107,7 +103,7 @@ const Navbar = () => {
                       : "border-gray-300"
                   } ${
                     pathname === item.path
-                      ? "shadow-md scale-105" // Highlight current path
+                      ? "shadow-md scale-105"
                       : ""
                   }`}
                 >
@@ -115,8 +111,6 @@ const Navbar = () => {
                     <div className="lg:w-2.5 lg:h-2.5 w-3.5 h-3.5 rounded-full bg-white"></div>
                   )}
                 </div>
-
-                {/* Step Label */}
                 <span
                   className={`lg:text-xs text-[10px] w-12 font-medium ${
                     item.enabled ? "text-yellow-400" : "text-gray-400"
@@ -125,14 +119,19 @@ const Navbar = () => {
                   {item.label}
                 </span>
               </Link>
+
+              {/* Tooltip */}
+              {!item.enabled && (
+                <div className="absolute top-full w-max hidden px-3 py-1 text-xs text-white bg-black rounded shadow-lg group-hover:block">
+                  Isi data sebelumnya
+                </div>
+              )}
             </div>
 
-            {/* Divider */}
             {index < navItems.length - 1 && (
               <div
                 className={`h-[1px] lg:w-12 w-10 mb-5 transition-all ${
-                  item.enabled &&
-                  navItems[index + 1]?.enabled
+                  item.enabled && navItems[index + 1]?.enabled
                     ? "bg-yellow-400"
                     : "bg-gray-200"
                 }`}
