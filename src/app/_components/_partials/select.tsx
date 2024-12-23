@@ -20,7 +20,8 @@ export default function Select({
         w-full
         p-2
         h-10
-        border border-black border-opacity-40
+        border
+      border-black border-opacity-40
         focus:ring-black
         rounded-[10px]
         text-black

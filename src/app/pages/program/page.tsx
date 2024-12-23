@@ -151,9 +151,9 @@ export default function ProgramPage() {
         <div className="w-full flex flex-col space-y-2">
           <Label htmlFor="paket" required>Pilih Paket :</Label>
 
-          <div className="overflow-y-auto scroll-hidden">
+          <div className="lg:overflow-y-auto scroll-hidden">
 
-            <ul className="w-max flex flex-row space-x-4">
+            <ul className="lg:w-max w-full lg:flex lg:flex-row lg:space-x-4 grid :grid-cols-auto-fit grid-cols-2 gap-4 lg:gap-0">
 
               {paketTabList.map((item) => (
                 <TabList
@@ -194,9 +194,9 @@ export default function ProgramPage() {
           <div className="flex flex-col space-y-2 w-full md:w-1/2">
             <Label htmlFor="tipekamar" required>Pilih Tipe Kamar :</Label>
 
-            <div className="overflow-y-auto scroll-hidden">
+            <div className="lg:overflow-y-auto scroll-hidden">
 
-              <ul className="w-max flex flex-row space-x-4">
+              <ul className="lg:w-max w-full lg:flex lg:flex-row lg:space-x-4 grid :grid-cols-auto-fit grid-cols-2 gap-4 lg:gap-0">
 
                 {tipeKamar.map((item) => (
                   <TabList
@@ -213,7 +213,7 @@ export default function ProgramPage() {
           </div>
 
           <div className="flex flex-col justify-center w-full lg:w-1/4 md:w-1/4">
-          <h2 className="text-center text-sm pb-2 lg:pt-0 pt-2">Total Harga :</h2>
+          <h2 className="text-center text-black text-sm pb-2 lg:pt-0 pt-2">Total Harga :</h2>
           <h2 className="bg-bill text-center text-white py-2 px-1 rounded-[10px]">Rp 9.000.000</h2>
           </div>
 

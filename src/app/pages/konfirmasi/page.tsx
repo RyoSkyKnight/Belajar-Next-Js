@@ -18,23 +18,28 @@ export default function KonfirmasiPage() {
     if (savedData) setFormData(JSON.parse(savedData));
   }, []);
 
+  function capitalizeFirstLetter(val: string | number) {
+    if (val === null || val === undefined) return val; // Return the value as is if it's null or undefined
+    return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+  }
+  
   return (
     <CustomLayout
       mainline="Tinggal selangkah lagi menuju kesuksesan! 🚀"
       line="Konfirmasi dulu biar gak ada kekeliruan nanti {'<3'} ! 😍 #KampungInggrisLC #BelajarAsikDenganHasilMaksimal"
     >
       {/* Main Content */}
-      <div className="w-full mx-auto rounded-3xl border border-gray-200 bg-white p-2 lg:py-3 lg:px-6 h-auto">
-        <h2 className="mb-4 text-center text-xl font-bold">Ringkasan Pembayaran</h2>
+      <div className="w-full mx-auto rounded-3xl lg:border lg:border-gray-400 bg-white p-2 lg:py-3 lg:px-6 h-auto">
+        <h2 className="mb-4 text-center text-black text-xl font-bold">Ringkasan Pembayaran</h2>
 
         {/* Data Diri */}
-        <div className="mb-6">
-          <h3 className="mb-4 text-[16px] font-semibold text-gray-700">Data Diri</h3>
+        <div className="mb-4">
+          <h3 className="mb-3 text-[16px] font-semibold text-gray-700">Data Diri</h3>
           <div className="grid grid-cols-1 gap-y-4 lg:grid-cols-2 lg:gap-x-8">
             <div className="space-y-2">
               <div className="flex items-center text-[14px]">
                 <span className="w-24 text-gray-500">Nama</span>
-                <span className="text-gray-700">: {formData.nama || "Belum diisi"}</span>
+                <span className="text-gray-700">: { capitalizeFirstLetter(formData.nama) || "Belum diisi"}</span>
               </div>
               <div className="flex items-center text-[14px]">
                 <span className="w-24 text-gray-500">WhatsApp</span>
@@ -48,11 +53,11 @@ export default function KonfirmasiPage() {
             <div className="space-y-2">
               <div className="flex items-center text-[14px]">
                 <span className="w-24 text-gray-500">Gender</span>
-                <span className="text-gray-700">: {formData.gender || "Belum diisi"}</span>
+                <span className="text-gray-700">: { capitalizeFirstLetter(formData.gender) || "Belum diisi"}</span>
               </div>
               <div className="flex items-center text-[14px]">
                 <span className="w-24 text-gray-500">Kesibukan</span>
-                <span className="text-gray-700">: {formData.kesibukan || "Belum diisi"}</span>
+                <span className="text-gray-700">: { capitalizeFirstLetter(formData.kesibukan) || "Belum diisi"}</span>
               </div>
             </div>
           </div>
@@ -60,7 +65,7 @@ export default function KonfirmasiPage() {
 
         {/* Detail Pembayaran */}
         <div>
-          <h3 className="mb-4 text-[16px] font-semibold text-gray-700">Detail Pembayaran</h3>
+          <h3 className="mb-3 text-[16px] font-semibold text-gray-700">Detail Pembayaran</h3>
           <div className="space-y-3 text-[14px]">
             <div className="flex justify-between text-gray-600">
               <span>
@@ -77,7 +82,7 @@ export default function KonfirmasiPage() {
               <span>Rp. 60.000</span>
             </div>
             <div className="my-2 border-b border-gray-300"></div>
-            <div className="flex justify-between text-[15px] font-semibold">
+            <div className="flex justify-between text-black text-[15px] font-bold">
               <span>Total Pembayaran</span>
               <span>Rp. 9.960.000</span>
             </div>
@@ -109,7 +114,7 @@ export default function KonfirmasiPage() {
   className={`w-full py-2 rounded-md text-white transition-all duration-200 ${
     accepted
       ? "cursor-pointer"
-      : "bg-gray-300 cursor-not-allowed"
+      : "bg-gray-300 cursor-not-allowed hover:bg-gray-300"
   }`}
 >
   Konfirmasi

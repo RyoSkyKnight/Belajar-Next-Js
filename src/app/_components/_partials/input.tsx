@@ -2,7 +2,6 @@ import React, { forwardRef } from 'react';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   className?: string; // Kelas kustom
-  variant?: 'default' | 'error' | 'success'; // Variasi gaya input
   icon?: React.ReactNode; // Opsional, ikon yang bisa ditampilkan di input
   wrapperClassName?: string; // Styling untuk wrapper
 }
@@ -13,7 +12,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       type= '',
       className = '',
       wrapperClassName = '',
-      variant = 'default',
       icon,
       ...props
     },
@@ -24,34 +22,23 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       w-full
       bg-transparent
       border
+      border-gray-400
       rounded-[10px]
       px-3
       py-2
       focus:outline-none
       focus:ring-2
       focus:ring-opacity-50
-      text-gray-400
       text-black
     `;
 
-    // Variasi gaya
-    const variants = {
-      default: 'border-black border-opacity-40 focus:ring-black',
-      error: 'border-red-500 focus:ring-red-500',
-      success: 'border-green-500 focus:ring-green-500',
-    };
-
     return (
-      <div className={`flex items-center ${wrapperClassName}`}>
-        {icon && <div className="mr-2">{icon}</div>}
+      <div className={`relative ${wrapperClassName}`}>
+        {icon && <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">{icon}</div>}
         <input
-         type={type}
+          type={type}
+          className={`${baseStyles} ${className} ${icon ? 'pl-10' : ''}`}
           ref={ref}
-          className={`
-            ${baseStyles}
-            ${variants[variant]}
-            ${className}
-          `}
           {...props}
         />
       </div>
