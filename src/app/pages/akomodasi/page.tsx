@@ -118,10 +118,10 @@ export default function ProgramPage() {
             />
           </div>
 
-          <div className="flex flex-col justify-center w-full lg:w-1/4 md:w-1/4">
-            <h2 className="text-center text-black text-sm pb-2 lg:pt-0 pt-2">Total Harga :</h2>
-            <h2 className="bg-bill text-center text-white py-2 px-1 rounded-[10px]">Rp 900.000</h2>
-          </div>
+          <div className="flex flex-col justify-center items-center w-full lg:pt-0 lg:w-1/4">
+              <h2 className="text-center text-black font-semibold text-sm pb-2">Total Harga :</h2>
+              <h2 className="bg-bill text-center text-white py-2 px-6 rounded-[10px]">Rp 900.000</h2>
+            </div>
         </div>
 
   </div>

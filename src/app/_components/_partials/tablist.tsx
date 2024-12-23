@@ -25,16 +25,16 @@ const TabList: FC<TabListProps> = ({ label, value, isActive = false, onClick }) 
                 cursor-pointer
                 rounded-[10px]
                 text-sm
-                hover:bg-gray-100
+              hover:text-black
+                hover:bg-main-color
                 focus:outline-none
                 focus:ring-2
                 focus:ring-opacity-50
                 transition-all
                 duration-200
-                ${
-                    isActive
-                        ? 'border-main-color font-bold bg-main-color text-black'
-                        : 'border-black/40 text-gray-400'
+                ${isActive
+                    ? 'border-main-color font-bold bg-main-color text-black hover:bg-main-color scale-2'
+                    : 'border-black/40 text-gray-400'
                 }
             `}
         >

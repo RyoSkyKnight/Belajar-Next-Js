@@ -107,7 +107,7 @@ export default function ProgramPage() {
   ];
 
   const tipeKamar = [
-    { value: "camp_grade_1", label: "Camp Grade 1", desc: "Kamar ber-AC, 2 tempat tidur, kamar mandi dalam" },
+    { value: "camp_grade_1", label: "Camp Grade 1", desc: "Kamar ber-AC, 2 tempat tidur, kamar mandi dalam"},
     { value: "camp_grade_2", label: "Camp Grade 2", desc: "Kamar ber-AC, 3 tempat tidur, kamar mandi dalam" },
     { value: "non_camp", label: "Non-Camp", desc: "" },
   ];
@@ -216,7 +216,7 @@ export default function ProgramPage() {
                 </ul>
                   {/* Display description in one place */}
               {selectedTipe && (
-                <div className="lg:absolute lg:w-1/2 w-auto h-auto pt-4">
+                <div className="lg:absolute lg:w-1/4 w-auto h-auto pt-4">
                   <p className="lg:text-left text-center text-xs text-gray-400">
                     {tipeKamar.find((item) => item.value === selectedTipe)?.desc || "-"}
                   </p>
@@ -226,9 +226,14 @@ export default function ProgramPage() {
 
             </div>
 
-            <div className="flex flex-col justify-center w-full lg:pt-0 lg:w-1/4">
-              <h2 className="text-center text-black text-sm pb-2 lg:pt-0 pt-2">Total Harga :</h2>
-              <h2 className="bg-bill text-center text-white py-2 px-1 rounded-[10px]">Rp 9.000.000</h2>
+            {/* <div className="flex flex-col justify-center items-center w-full lg:w-1/4">
+              <h2 className="text-center text-black font-semibold text-sm pb-2">Total Harga :</h2>
+              <h2 className="bg-none text-center text-black border-2 border-gray-400 py-2 px-6 rounded-[10px]">Rp 9.000.000</h2>
+            </div> */}
+
+            <div className="flex flex-col justify-center items-center w-full lg:pt-0 lg:w-1/4">
+              <h2 className="text-center text-black font-semibold text-sm pb-2">Total Harga :</h2>
+              <h2 className="bg-bill text-center text-white py-2 px-6 rounded-[10px]">Rp 9.000.000</h2>
             </div>
 
           </div>
