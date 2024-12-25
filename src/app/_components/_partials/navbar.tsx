@@ -15,6 +15,36 @@ const Navbar = () => {
     akomodasi: false,
   });
 
+  enum ReferrerEnum {
+    DataDiri = 0,
+    Program = 1,
+    Akomodasi = 2,
+    Konfirmasi = 3,
+  }
+
+  // Helper function untuk menentukan status aktif berdasarkan current path
+  const getActiveStatus = (currentPath: string) => {
+    switch (currentPath) {
+      case '/':
+        return ReferrerEnum.DataDiri;
+      case '/pages/program':
+        return ReferrerEnum.Program;
+      case '/pages/akomodasi':
+        return ReferrerEnum.Akomodasi;
+      case '/pages/konfirmasi':
+        return ReferrerEnum.Konfirmasi;
+      default:
+        return ReferrerEnum.DataDiri;
+    }
+  };
+
+  // Function untuk mengecek apakah nav item harus aktif
+  const shouldBeActive = (itemEnum: ReferrerEnum, currentPathEnum: ReferrerEnum) => {
+    return itemEnum <= currentPathEnum;
+  };
+
+  const currentPathEnum = getActiveStatus(pathname);
+
   const [formData, setFormData] = useState<{ [key: string]: string | number }>({});
 
   useEffect(() => {
@@ -64,12 +94,14 @@ const Navbar = () => {
       path: "/",
       step: "dataDiri",
       enabled: true,
+      enumValue: ReferrerEnum.DataDiri,
     },
     {
       label: "Program",
       path: "/pages/program",
       step: "program",
       enabled: completedSteps.dataDiri,
+      enumValue: ReferrerEnum.Program,
     },
     ...(formData?.cabang === "PARE - JATIM"
       ? [
@@ -78,6 +110,7 @@ const Navbar = () => {
             path: "/pages/akomodasi",
             step: "akomodasi",
             enabled: completedSteps.program && completedSteps.dataDiri,
+            enumValue: ReferrerEnum.Akomodasi,
           },
         ]
       : []),
@@ -89,7 +122,8 @@ const Navbar = () => {
         formData?.cabang === "PARE - JATIM"
           ? completedSteps.akomodasi && completedSteps.program && completedSteps.dataDiri
           : completedSteps.program && completedSteps.dataDiri,
-    }, 
+      enumValue: ReferrerEnum.Konfirmasi,
+    },
   ];
 
   return (
@@ -106,7 +140,7 @@ const Navbar = () => {
               >
                 <div
                   className={`lg:w-3.5 lg:h-3.5 w-5 h-5 rounded-full flex items-center justify-center border-2 transition-all ${
-                    item.enabled
+                    shouldBeActive(item.enumValue, currentPathEnum)
                       ? "bg-yellow-400 border-yellow-400"
                       : "border-gray-300"
                   } ${
@@ -115,20 +149,19 @@ const Navbar = () => {
                       : ""
                   }`}
                 >
-                  {pathname === item.path && item.enabled && (
+                  {pathname === item.path && (
                     <div className="lg:w-2.5 lg:h-2.5 w-3.5 h-3.5 rounded-full bg-white"></div>
                   )}
                 </div>
                 <span
                   className={`lg:text-xs text-[10px] w-12 font-medium ${
-                    item.enabled ? "text-yellow-400" : "text-gray-400"
+                    shouldBeActive(item.enumValue, currentPathEnum) ? "text-yellow-400" : "text-gray-400"
                   }`}
                 >
                   {item.label}
                 </span>
               </Link>
 
-              {/* Tooltip */}
               {!item.enabled && (
                 <div className="absolute top-full w-max hidden px-3 py-1 text-xs text-white bg-black rounded shadow-lg group-hover:block">
                   Isi data sebelumnya
@@ -139,7 +172,8 @@ const Navbar = () => {
             {index < navItems.length - 1 && (
               <div
                 className={`h-[1px] lg:w-12 w-10 mb-5 transition-all ${
-                  item.enabled && navItems[index + 1]?.enabled
+                  shouldBeActive(item.enumValue, currentPathEnum) && 
+                  shouldBeActive(navItems[index + 1].enumValue, currentPathEnum)
                     ? "bg-yellow-400"
                     : "bg-gray-200"
                 }`}
