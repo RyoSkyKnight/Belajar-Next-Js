@@ -28,6 +28,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       py-2
       focus:outline-none
       focus:ring-2
+      focus:border-main-color
+      focus:ring-main-color
       focus:ring-opacity-50
       text-black
     `;

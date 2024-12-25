@@ -23,6 +23,7 @@ export default function Button({
     focus:outline-none
     focus:ring-2
     focus:ring-offset-2
+    ${className}
   `;
 
   const variants = {

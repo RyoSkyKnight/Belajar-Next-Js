@@ -38,10 +38,18 @@ const Navbar = () => {
               parsedData.periode &&
               parsedData.paket &&
               parsedData.paketdetail &&
-              parsedData.tipekamar
+              (() => {
+                switch (parsedData.paket) {
+                  case "intergrated":
+                    return parsedData.jampertemuan;
+                  case "private":
+                    return parsedData.jampertemuanprivate1 && parsedData.jampertemuanprivate2;
+                  default:
+                    return parsedData.tipekamar;
+                }
+              })()
           ),
           akomodasi: Boolean(
-            parsedData.cabang === "PARE - JATIM" &&
               parsedData.lokasijemput &&
               parsedData.kendaraan
           ),
@@ -69,7 +77,7 @@ const Navbar = () => {
             label: "Akomodasi",
             path: "/pages/akomodasi",
             step: "akomodasi",
-            enabled: completedSteps.program,
+            enabled: completedSteps.program && completedSteps.dataDiri,
           },
         ]
       : []),
@@ -79,9 +87,9 @@ const Navbar = () => {
       step: "konfirmasi",
       enabled:
         formData?.cabang === "PARE - JATIM"
-          ? completedSteps.akomodasi
-          : completedSteps.program,
-    },
+          ? completedSteps.akomodasi && completedSteps.program && completedSteps.dataDiri
+          : completedSteps.program && completedSteps.dataDiri,
+    }, 
   ];
 
   return (

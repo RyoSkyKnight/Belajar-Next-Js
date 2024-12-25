@@ -8,8 +8,13 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import TabList from "@/app/_components/_partials/tablist";
 
+
 interface FormData {
-  [key: string]: string | number;
+  [key: string]: string | number | undefined;
+  jampertemuan?: string;
+  tipekamar?: string | number;
+  jampertemuanprivate1?: string;
+  jampertemuanprivate2?: string;
 }
 
 export default function ProgramPage() {
@@ -64,13 +69,34 @@ export default function ProgramPage() {
 
     // Redirect ke halaman program
     const data = JSON.parse(sessionStorage.getItem("formData") || "{}");
-
-    if (data.cabang === "PARE - JATIM") {
-      router.push("/pages/akomodasi");
-    } else {
-      router.push("/pages/konfirmasi");
+    const requiredFields = ["cabang", "periode", "paket", "paketdetail"];
+    
+    switch (data.paket) {
+      case "intergrated":
+        requiredFields.push("jampertemuan");
+        break;
+      case "private":
+        requiredFields.push("jampertemuanprivate1", "jampertemuanprivate2");
+        break;
+      default:
+        requiredFields.push("tipekamar");
+        break;
     }
+    
+    const missingFields = requiredFields.filter(field => !data[field]);
+  
+
+    if (missingFields.length === 0) {
+      if (data.cabang === "PARE - JATIM") {
+        router.push("/pages/akomodasi");
+      } else {
+        router.push("/pages/konfirmasi");
+      }
+    } else {
+      alert("Mohon lengkapi data berikut: " + missingFields.join(", "));
+    };
   };
+
 
   // Options untuk dropdown
   const cabangOptions = [
@@ -94,7 +120,7 @@ export default function ProgramPage() {
     { value: "english_master", label: "English Master Pro" },
     { value: "desember_ceria", label: "Desember Ceria" },
     { value: "private", label: "Private Class" },
-    { value: "business", label: "Business English" },
+    { value: "intergrated", label: "Intergrated" },
     { value: "toefl", label: "TOEFL Preparation" },
     { value: "ielts", label: "IELTS Ready" },
     { value: "conversation", label: "Daily Conversation" }
@@ -107,10 +133,27 @@ export default function ProgramPage() {
   ];
 
   const tipeKamar = [
-    { value: "camp_grade_1", label: "Camp Grade 1", desc: "Kamar ber-AC, 2 tempat tidur, kamar mandi dalam"},
+    { value: "camp_grade_1", label: "Camp Grade 1", desc: "Kamar ber-AC, 2 tempat tidur, kamar mandi dalam" },
     { value: "camp_grade_2", label: "Camp Grade 2", desc: "Kamar ber-AC, 3 tempat tidur, kamar mandi dalam" },
     { value: "non_camp", label: "Non-Camp", desc: "" },
   ];
+
+  const jamPertemuan = [
+    { value: "07.00", label: "07.00 WIB" },
+    { value: "14.00", label: "14.00 WIB" },
+  ];
+
+  const privateOptions = [
+    [
+      { value: "07.00", label: "07.00 WIB" },
+      { value: "14.00", label: "14.00 WIB" },
+    ],
+    [
+      { value: "07.00", label: "07.00 WIB" },
+      { value: "14.00", label: "14.00 WIB" },
+    ],
+  ];
+
 
   const [selectedTipe, setSelectedTipe] = useState<string | null>(null);
 
@@ -153,10 +196,8 @@ export default function ProgramPage() {
           <div className="w-full flex flex-col space-y-2">
             <Label htmlFor="paket" required>Pilih Paket :</Label>
 
-            <div className="lg:overflow-y-auto scroll-hidden">
-
-              <ul className="lg:w-max w-full lg:flex lg:flex-row lg:space-x-4 grid :grid-cols-auto-fit grid-cols-2 gap-4 lg:gap-0">
-
+            <div className="w-full">
+              <ul className="lg:flex lg:flex-row lg:flex-wrap max-w-full gap-4 grid grid-cols-2 ">
                 {paketTabList.map((item) => (
                   <TabList
                     key={item.value}
@@ -170,12 +211,14 @@ export default function ProgramPage() {
             </div>
           </div>
 
+
+
           <div className="w-full flex flex-col space-y-2">
-            <Label htmlFor="paketDetail" required>Pilih Durasi Paket :</Label>
+            <Label htmlFor="paketdetail" required>Pilih Durasi Paket :</Label>
 
             <div className="overflow-y-auto scroll-hidden">
 
-              <ul className="w-max flex flex-row space-x-4">
+              <ul className="lg:flex lg:flex-row lg:flex-wrap lg:w-max max-w-full gap-4 grid grid-cols-2 ">
 
                 {paketDurasiTabList.map((item) => (
                   <TabList
@@ -196,36 +239,123 @@ export default function ProgramPage() {
           <div className="flex flex-col lg:flex-row justify-between w-full space-y-4 lg:space-y-0">
 
             <div className="flex flex-col space-y-2 w-full lg:w-1/2">
-              <Label htmlFor="tipekamar" required>Pilih Tipe Kamar :</Label>
+              {/* Gunakan switch untuk menentukan label */}
+              <Label htmlFor="tipekamar" required>
+                {(() => {
+                  switch (formData.paket) {
+                    case "intergrated":
+                    case "private":
+                      return "Pilih Jam Pertemuan"; // Untuk paket intergrated dan private
+                    default:
+                      return "Pilihan Tipe Kamar"; // Untuk paket lainnya
+                  }
+                })()} :
+              </Label>
 
-              <div className="lg:overflow-y-auto scroll-hidden">
-                <ul className="lg:w-max w-full lg:flex lg:flex-row lg:space-x-4 grid grid-cols-2 gap-4 lg:gap-0">
-                  {tipeKamar.map((item) => (
-                    <div key={item.value}>
-                      <TabList
-                        label={item.label}
-                        value={item.value}
-                        onClick={(value) => {
-                          handleTipeTabClick(value);
-                          setSelectedTipe(value as string);
-                        }}
-                        isActive={formData.tipekamar === item.value}
-                      />
-                    </div>
-                  ))}
-                </ul>
-                  {/* Display description in one place */}
-              {selectedTipe && (
-                <div className="lg:absolute lg:w-1/4 w-auto h-auto pt-4">
-                  <p className="lg:text-left text-center text-xs text-gray-400">
-                    {tipeKamar.find((item) => item.value === selectedTipe)?.desc || "-"}
-                  </p>
-                </div>
-              )}
-              </div>
+              {/* Menampilkan opsi sesuai dengan paket */}
+              {(() => {
+                switch (formData.paket) {
+                  case "private":
+                    return (
+                      <div className="w-full flex flex-col space-y-2 lg:flex-row lg:space-x-4 lg:space-y-0">
+                        <Select
+                          name="jampertemuanprivate1"
+                          options={privateOptions[0]}
+                          placeholder="Jam Pertemuan 1"
+                          value={formData.jampertemuanprivate1 || ""}
+                          onChange={handleChange}
+                          required
+                        />
+                        <Select
+                          name="jampertemuanprivate2"
+                          options={privateOptions[1]}
+                          placeholder="Jam Pertemuan 2"
+                          value={formData.jampertemuanprivate2 || ""}
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
+                    );
 
+                    default : // Untuk paket default lainnya
+                    let options = [];
+
+                    switch (formData.paket) {
+                      case "intergrated":
+                        options = jamPertemuan; // Opsi untuk jam pertemuan untuk paket intergrated
+                        break;
+                      default:
+                        options = tipeKamar; // Opsi untuk tipe kamar untuk paket lainnya
+                        break;
+                    }
+
+                    return (
+                      <div className="lg:overflow-y-auto scroll-hidden">
+                        <ul className="lg:w-max w-full lg:flex lg:flex-row lg:space-x-4 grid grid-cols-2 gap-4 lg:gap-0">
+                          {options.map((option) => (
+                            <div key={option.value}>
+                              <TabList
+                                label={option.label}
+                                value={option.value}
+                                onClick={() => {
+                                  handleTipeTabClick(option.value);
+
+                                  // Tentukan field mana yang diperbarui berdasarkan paket
+                                  const updatedFormData: FormData = (() => {
+                                    switch (formData.paket) {
+                                      case "intergrated":
+                                        return { ...formData, jampertemuan: option.value }; // Update jamPertemuan
+                                      default:
+                                        return { ...formData, tipekamar: option.value }; // Update tipeKamar
+                                    }
+                                  })();
+
+                                  // Simpan data ke state dan sessionStorage
+                                  setFormData(updatedFormData);
+                                  sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
+
+                                  // Reset selectedTipe jika paket adalah intergrated
+                                  setSelectedTipe(
+                                    formData.paket === "intergrated" ? null : (option.value as string)
+                                  );
+                                }}
+                                isActive={
+                                  (() => {
+                                    switch (formData.paket) {
+                                      case "intergrated":
+                                        return formData.jampertemuan === option.value; // Aktif untuk jamPertemuan
+                                      default:
+                                        return formData.tipekamar === option.value; // Aktif untuk tipeKamar
+                                    }
+                                  })()
+                                }
+                              />
+                            </div>
+                          ))}
+                        </ul>
+
+                        {/* Tampilkan deskripsi jika paket bukan intergrated */}
+                        {(() => {
+                          switch (formData.paket) {
+                            case "intergrated":
+                              return null; // Tidak ada deskripsi untuk paket intergrated
+                            default:
+                              return (
+                                selectedTipe && (
+                                  <div className="lg:absolute lg:w-1/4 w-auto h-auto pt-4">
+                                  <p className="lg:text-left text-center text-xs text-gray-400">
+                                    {tipeKamar.find((item) => item.value === selectedTipe)?.desc || "-"}
+                                  </p>
+                                </div>
+                                )
+                              );
+                          }
+                        })()}
+                      </div>
+                    );
+                }
+              })()}
             </div>
-
             {/* <div className="flex flex-col justify-center items-center w-full lg:w-1/4">
               <h2 className="text-center text-black font-semibold text-sm pb-2">Total Harga :</h2>
               <h2 className="bg-none text-center text-black border-2 border-gray-400 py-2 px-6 rounded-[10px]">Rp 9.000.000</h2>
@@ -239,14 +369,18 @@ export default function ProgramPage() {
           </div>
         </div>
         {/* Submit Button */}
+        <div className="">
         <div className="flex flex-col justify-center items-center">
           <p className="text-gray-500 text-sm text-center pb-4">
             Pastikan anda telah memilih program anda dengan baik & benar sebelum lanjut!
           </p>
-          <Button type="submit" className="w-full">Yuk Lanjut!</Button>
+          <div className="flex flex-row w-full gap-4">
+            <Button type="button" className="w-full bg-white border-2 border-main-color" onClick={() => router.push("/")}>Kembali</Button>
+            <Button type="submit" className="w-full">Lanjut!!</Button>
+          </div>
+        </div>
         </div>
       </form>
-
     </CustomLayout>
   );
 }

@@ -7,6 +7,7 @@ import Label from "@/app/_components/_partials/label";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Input from "@/app/_components/_partials/input";
+import TabList from "@/app/_components/_partials/tablist";
 
 interface FormData {
   [key: string]: string | number;
@@ -33,16 +34,32 @@ export default function ProgramPage() {
     sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
   };
 
-  // Handle submit form
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
 
-    // Simpan data di sessionStorage
-    sessionStorage.setItem("formData", JSON.stringify(formData));
 
-    // Redirect ke halaman program
-    router.push("/pages/konfirmasi");
+  const handleTabClick = (value: string | number) => {
+    const updatedFormData = { ...formData, kendaraan : String(value) };
+    setFormData(updatedFormData);
+    sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
   };
+
+
+  // Handle submit form
+   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+  
+      // Simpan data di sessionStorage
+      sessionStorage.setItem("formData", JSON.stringify(formData));
+  
+      // Redirect ke halaman program
+      const requiredFields = ["lokasijemput", "kendaraan", "penumpang"];
+      const missingFields = requiredFields.filter(field => !formData[field as keyof typeof formData]);
+      
+      if (missingFields.length === 0) {
+        router.push("/pages/konfirmasi");
+      } else {
+        alert("Mohon lengkapi data berikut: " + missingFields.join(", "));
+      };
+    };
 
   // Options untuk dropdown
   const lokasiJemputOptions = [
@@ -67,7 +84,7 @@ export default function ProgramPage() {
       mainline="Wah, dikit lagi nih! Langkah demi langkah menuju kesuksesan dimulai! 🚀"
       line="Ayo, kita taklukkan bahasa Inggris bareng-bareng! 💪 #DrivesYourSuccess #BoostYourEnglishWithLC"
     >
-       <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-10 lg:space-y-20">
+       <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-10 lg:space-y-32">
        <div className="flex flex-col space-y-4 min-h-[320px] h-full">
 
         <div className="flex flex-col space-y-2">
@@ -83,15 +100,25 @@ export default function ProgramPage() {
 
         {/* Select Cabang dan Periode */}
         <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+
           <div className="w-full md:w-1/2 flex flex-col space-y-2">
             <Label htmlFor="kendaraan" required>Pilih Tipe Kendaraan :</Label>
-            <Select
-              name="kendaraan"
-              options={kendaraanOptions}
-              value={formData.kendaraan || ""}
-              onChange={handleChange}
-              required
-            />
+            <div className="lg:overflow-y-auto scroll-hidden ">
+
+                <ul className="lg:flex lg:flex-row lg:space-x-4 grid :grid-cols-auto-fit grid-cols-2 gap-4 lg:gap-0">
+
+                  {kendaraanOptions.map((item) => (
+                    <TabList 
+                      className="w-full"
+                      key={item.value}
+                      label={item.label}
+                      value={item.value}
+                      onClick={handleTabClick}
+                      isActive={formData.kendaraan === item.value}
+                    />
+                  ))}
+                </ul>
+              </div>
           </div>
 
           <div className="w-full md:w-1/2 flex flex-col space-y-2">
@@ -106,7 +133,7 @@ export default function ProgramPage() {
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row justify-between w-full space-y-4 md:space-y-0">
+        <div className="flex flex-col lg:flex-row justify-between w-full space-y-4 lg:space-y-0">
           <div className="flex flex-col space-y-2 w-full md:w-1/3">
             <Label htmlFor="diskon">Kode Voucher :</Label>
             <Input
@@ -126,11 +153,16 @@ export default function ProgramPage() {
 
   </div>
         {/* Submit Button */}
+        <div className="">
         <div className="flex flex-col justify-center items-center">
           <p className="text-gray-500 text-sm text-center pb-4">
             Biaya penjemputan & kamar akan di tambahkan dengan biaya program sebelumnya!
           </p>
-          <Button type="submit" className="w-full">Yuk Lanjut!</Button>
+           <div className="flex flex-row w-full gap-4">
+                      <Button type="button" className="w-full bg-white border-2 border-main-color" onClick={() => router.push("/pages/program")}>Kembali</Button>
+                      <Button type="submit" className="w-full">Yuk Lanjut!</Button>
+                    </div>
+        </div>
         </div>
       </form>
     </CustomLayout>

@@ -5,9 +5,10 @@ interface TabListProps {
     value: string | number;
     isActive?: boolean;
     onClick?: (value: string | number) => void;
+    className?: string;
 }
 
-const TabList: FC<TabListProps> = ({ label, value, isActive = false, onClick }) => {
+const TabList: FC<TabListProps> = ({ label, value, isActive = false, onClick, className = "" }) => {
     const handleClick = () => {
         if (onClick) {
             onClick(value);
@@ -18,22 +19,23 @@ const TabList: FC<TabListProps> = ({ label, value, isActive = false, onClick }) 
         <li
             onClick={handleClick}
             className={`
-                w-auto
-                border
-                py-2
-                px-3
-                cursor-pointer
-                rounded-[10px]
-                text-sm
-              hover:text-black
-                hover:bg-main-color
-                focus:outline-none
-                focus:ring-2
-                focus:ring-opacity-50
-                transition-all
-                duration-200
-                ${isActive
-                    ? 'border-main-color font-bold bg-main-color text-black hover:bg-main-color scale-2'
+            border
+            py-2
+            px-3
+            cursor-pointer
+            rounded-[10px]
+            text-sm
+            text-center
+            hover:text-black
+            hover:bg-main-color
+            focus:outline-none
+            focus:ring-2
+            focus:ring-opacity-50
+            transition-transform
+            duration-300
+            ${className}
+            ${isActive
+                    ? ' bg-main-color text-black hover:bg-main-color border border-gray-400'
                     : 'border-black/40 text-gray-400'
                 }
             `}

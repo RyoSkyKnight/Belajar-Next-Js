@@ -1,5 +1,6 @@
 @tailwind base;
 @tailwind components;
+
 @tailwind utilities;
 
 :root {
@@ -34,4 +35,10 @@ body {
   background-position: center; /* Centers the image */
   background-repeat: no-repeat; /* Prevents the image from repeating */
 }
+
+textarea::placeholder {
+  color: #9ca3af; /* Tailwind's gray-400 */
+  font-size: 10px;
+}
+
 
