@@ -63,8 +63,7 @@ export default function ProgramPage() {
           } else {  
             const missingLabels = missingFields.map((item) => item.label);
                 toast.error(
-                  "Mohon lengkapi data berikut: " + missingLabels.join(", "),
-                  { autoClose: 2000 }
+                  "Mohon lengkapi data berikut: " + missingLabels.join(", ")
                 );
          }
        };

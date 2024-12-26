@@ -8,7 +8,7 @@ import "../globals.css";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, Bounce } from 'react-toastify';
 
 interface CustomLayoutProps {
   children: React.ReactNode;
@@ -24,15 +24,26 @@ export default function CustomLayout({
   const router = useRouter();
 
   useEffect(() => {
-      const savedData = sessionStorage.getItem("formData");
-      if (!savedData) {
-        router.push("/");
-      }
-    }, [router]);
-return (
- 
+    const savedData = sessionStorage.getItem("formData");
+    if (!savedData) {
+      router.push("/");
+    }
+  }, [router]);
+  return (
+
     <div className="flex flex-row w-full h-auto  lg:h-screen bg-img">
-       <ToastContainer />
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick={true}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
       {/* Container */}
       <div className="lg:w-[60%] w-[100%] h-full bg-white shadow-lg lg:rounded-tr-[40px] lg:rounded-br-[40px] items-center justify-center align-middle">
         <div className="mx-10 my-5">
@@ -84,7 +95,7 @@ return (
       </div>
 
 
-      <Link href="https://cs.kampunginggrislc.com/?utm_content=register">
+      <Link href="https://cs.kampunginggrislc.com/?utm_content=register" rel="noopener noreferrer" target="_blank">
         <div className="fixed bottom-5 right-5 animate-bounce">
           <div className="w-14 h-14 rounded-full bg-red-600 flex flex-col items-center justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mb-0" viewBox="0 -960 960 960" fill="#ffffff">
