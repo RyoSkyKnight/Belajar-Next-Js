@@ -2,12 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 import Input from "./_components/_partials/input";
 import CustomLayout from "./_components/layout";
 import Select from "./_components/_partials/select";
 import Button from "./_components/_partials/button";
 import Label from "./_components/_partials/label";
 import TabList from "./_components/_partials/tablist";
+import { validateFormData } from "./_backend/_utils/validation";
 
 export default function Page() {
   const router = useRouter();
@@ -21,19 +23,10 @@ export default function Page() {
     umur: "",
     kesibukan: "",
     knowlcfrom: "",
-    cabang: "",
-    periode: "",
-    paket: "",
-    paketdetail: "",
-    diskon: "",
-    lokasijemput: "",
-    kendaraan: "",
-    tipekamar: "",
-    jampertemuan: "",
-    jampertemuanprivate1: "",
-    jampertemuanprivate2: "",
     ketentuan: false,
   });
+
+
 
   // Ambil data dari sessionStorage jika ada
   useEffect(() => {
@@ -41,10 +34,12 @@ export default function Page() {
     if (savedData) setFormData(JSON.parse(savedData));
   }, []);
 
+
   // Handle perubahan input
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     const updatedFormData = { ...formData, [name]: value };
+
     setFormData(updatedFormData);
 
     // Simpan data di sessionStorage
@@ -67,14 +62,17 @@ export default function Page() {
     sessionStorage.setItem("formData", JSON.stringify(formData));
 
     // Redirect ke halaman program
-    const requiredFields = ['nama', 'email', 'nomor', 'gender', 'kesibukan', 'knowlcfrom' ,'umur'];
-    const missingFields = requiredFields.filter(field => !formData[field as keyof typeof formData]);
-    
-    if (missingFields.length === 0) {
-      router.push("/pages/program");
+    const { isValid, missingFields } = validateFormData(formData);
+
+    if (isValid) {
+     router.push("/pages/program")
     } else {
-      alert("Mohon lengkapi data berikut: " + missingFields.join(", "));
-    };
+      const missingLabels = missingFields.map((item) => item.label);
+      toast.error(
+        "Mohon lengkapi data berikut: " + missingLabels.join(", "),
+        { autoClose: 2000 }
+      );
+    }
   };
 
   // Options untuk dropdown
@@ -113,7 +111,7 @@ export default function Page() {
       line="Let's conquer English together! 💪 #KampungInggrisLC #RaihSuksesMuBersamaLC"
     >
       <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-10 lg:space-y-32 h-min">
-        <div className="flex flex-col space-y-4 min-h-[320px] h-full"> 
+        <div className="flex flex-col space-y-4 min-h-[320px] h-full">
           {/* Input Nama */}
           <div className="flex flex-col space-y-2">
             <Label htmlFor="nama" required>Nama Lengkap :</Label>
@@ -160,6 +158,7 @@ export default function Page() {
 
           {/* Select Gender dan Kesibukan */}
           <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+
             {/* <div className="w-full md:w-1/2 flex flex-col space-y-2">
             <Label htmlFor="gender" required>Jenis Kelamin :</Label>
             <Select
@@ -193,21 +192,21 @@ export default function Page() {
             </div>
 
             <div className="w-full md:w-1/2 flex flex-col space-y-2">
-            <Label htmlFor="umur" required>Umur :</Label>
-            <Select
-              name="umur"
-              options={umurOptions}
-              value={formData.umur}
-              onChange={handleChange}
-              required
-            />
+              <Label htmlFor="umur" required>Umur :</Label>
+              <Select
+                name="umur"
+                options={umurOptions}
+                value={formData.umur}
+                onChange={handleChange}
+                required
+              />
             </div>
 
           </div>
-          
+
           <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
-          <div className="flex flex-col space-y-2 md:w-1/2">
-          <Label htmlFor="kesibukan" required>Kesibukan :</Label>
+            <div className="flex flex-col space-y-2 md:w-1/2">
+              <Label htmlFor="kesibukan" required>Kesibukan :</Label>
               <Select
                 name="kesibukan"
                 options={kesibukanOptions}
@@ -215,30 +214,30 @@ export default function Page() {
                 onChange={handleChange}
                 required
               />
+            </div>
+
+            {/* Select Know LC From */}
+            <div className="flex flex-col space-y-2 md:w-1/2">
+              <Label htmlFor="knowlcfrom" required>Tau LC Darimana :</Label>
+              <Select
+                name="knowlcfrom"
+                options={knowLCFromOptions}
+                value={formData.knowlcfrom}
+                onChange={handleChange}
+                required
+              />
+            </div>
           </div>
-          
-          {/* Select Know LC From */}
-          <div className="flex flex-col space-y-2 md:w-1/2">
-            <Label htmlFor="knowlcfrom" required>Tau LC Darimana :</Label>
-            <Select
-              name="knowlcfrom"
-              options={knowLCFromOptions}
-              value={formData.knowlcfrom}
-              onChange={handleChange}
-              required
-            />
-          </div>
-        </div>
         </div>
 
         {/* Submit Button */}
         <div className="">
-        <div className="flex flex-col justify-center items-center ">
-          <p className="text-gray-500 text-sm text-center pb-4">
-            Pastikan anda telah mengisi data diri dengan baik & benar sebelum lanjut!
-          </p>
-          <Button type="submit" className="w-full lg:w-full">Yuk Lanjut!</Button>
-        </div>
+          <div className="flex flex-col justify-center items-center ">
+            <p className="text-gray-500 text-sm text-center pb-4">
+              Pastikan anda telah mengisi data diri dengan baik & benar sebelum lanjut!
+            </p>
+            <Button type="submit" className="w-full lg:w-full">Yuk Lanjut!</Button>
+          </div>
         </div>
       </form>
     </CustomLayout>

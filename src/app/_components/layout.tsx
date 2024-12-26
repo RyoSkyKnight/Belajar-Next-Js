@@ -7,6 +7,8 @@ import Navbar from "./_partials/navbar";
 import "../globals.css";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from 'react-toastify';
 
 interface CustomLayoutProps {
   children: React.ReactNode;
@@ -22,15 +24,15 @@ export default function CustomLayout({
   const router = useRouter();
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
       const savedData = sessionStorage.getItem("formData");
       if (!savedData) {
         router.push("/");
       }
-    }
-  }, [router]);
-  return (
+    }, [router]);
+return (
+ 
     <div className="flex flex-row w-full h-auto  lg:h-screen bg-img">
+       <ToastContainer />
       {/* Container */}
       <div className="lg:w-[60%] w-[100%] h-full bg-white shadow-lg lg:rounded-tr-[40px] lg:rounded-br-[40px] items-center justify-center align-middle">
         <div className="mx-10 my-5">
@@ -83,35 +85,25 @@ export default function CustomLayout({
 
 
       <Link href="https://cs.kampunginggrislc.com/?utm_content=register">
-        {/* <div className="fixed bottom-5 right-5 animate-bounce">
+        <div className="fixed bottom-5 right-5 animate-bounce">
           <div className="w-14 h-14 rounded-full bg-red-600 flex flex-col items-center justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mb-0" viewBox="0 -960 960 960" fill="#ffffff">
               <path d="M440-120v-80h320v-284q0-117-81.5-198.5T480-764q-117 0-198.5 81.5T200-484v244h-40q-33 0-56.5-23.5T80-320v-80q0-21 10.5-39.5T120-469l3-53q8-68 39.5-126t79-101q47.5-43 109-67T480-840q68 0 129 24t109 66.5Q766-707 797-649t40 126l3 52q19 9 29.5 27t10.5 38v92q0 20-10.5 38T840-249v49q0 33-23.5 56.5T760-120H440Zm-80-280q-17 0-28.5-11.5T320-440q0-17 11.5-28.5T360-480q17 0 28.5 11.5T400-440q0 17-11.5 28.5T360-400Zm240 0q-17 0-28.5-11.5T560-440q0-17 11.5-28.5T600-480q17 0 28.5 11.5T640-440q0 17-11.5 28.5T600-400Zm-359-62q-7-106 64-182t177-76q89 0 156.5 56.5T720-519q-91-1-167.5-49T435-698q-16 80-67.5 142.5T241-462Z" />
             </svg>
             <span className="text-[8px] lg:text-[9px] text-white">Tanya CS</span>
-          </div>
-        </div> */}
-        <div className="fixed bottom-5 right-5 animate-bounce">
-        <div className="w-14 h-14 rounded-full bg-red-600 flex flex-col items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mb-0" viewBox="0 -960 960 960" fill="#ffffff">
-              <path d="M440-120v-80h320v-284q0-117-81.5-198.5T480-764q-117 0-198.5 81.5T200-484v244h-40q-33 0-56.5-23.5T80-320v-80q0-21 10.5-39.5T120-469l3-53q8-68 39.5-126t79-101q47.5-43 109-67T480-840q68 0 129 24t109 66.5Q766-707 797-649t40 126l3 52q19 9 29.5 27t10.5 38v92q0 20-10.5 38T840-249v49q0 33-23.5 56.5T760-120H440Zm-80-280q-17 0-28.5-11.5T320-440q0-17 11.5-28.5T360-480q17 0 28.5 11.5T400-440q0 17-11.5 28.5T360-400Zm240 0q-17 0-28.5-11.5T560-440q0-17 11.5-28.5T600-480q17 0 28.5 11.5T640-440q0 17-11.5 28.5T600-400Zm-359-62q-7-106 64-182t177-76q89 0 156.5 56.5T720-519q-91-1-167.5-49T435-698q-16 80-67.5 142.5T241-462Z" />
-            </svg>
-            <span className="text-[8px] lg:text-[9px] text-white">Tanya CS</span>
-      
+
             {/* Tail */}
             <div
-      className="absolute bottom-[-3px] -left-1 w-0 h-0 border-l-[10px] border-l-transparent border-t-[15px] border-t-red-600 border-r-[10px] border-r-transparent rotate-[40deg] -z-10"
-    ></div>
+              className="absolute bottom-[-3px] -left-1 w-0 h-0 border-l-[10px] border-l-transparent border-t-[15px] border-t-red-600 border-r-[10px] border-r-transparent rotate-[40deg] -z-10"
+            ></div>
           </div>
         </div>
       </Link>
-
 
     </div>
   );
 }
 
-// Komponen Tagline/Deskripsi
 function TagDescription({
   mainline,
   line,

@@ -7,20 +7,47 @@ import Label from "@/app/_components/_partials/label";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import TabList from "@/app/_components/_partials/tablist";
+import { validateFormDataProgram } from "@/app/_backend/_utils/validation";
+import { toast } from "react-toastify";
 
-
-interface FormData {
-  [key: string]: string | number | undefined;
-  jampertemuan?: string;
-  tipekamar?: string | number;
-  jampertemuanprivate1?: string;
-  jampertemuanprivate2?: string;
-}
 
 export default function ProgramPage() {
   const router = useRouter();
 
-  const [formData, setFormData] = useState<FormData>({}); // Default kosong
+  const [formData, setFormData] = useState({
+    cabang: '',
+    periode: '',
+    paket: '',
+    paketdetail: '',
+    jampertemuanprivate1: '',
+    jampertemuanprivate2: '',
+    jampertemuan: '',
+    tipekamar: ''
+  }); // Default kosong
+
+
+    // useEffect(() => {
+    //   switch (formData.paket) {
+    //     case "intergrated":
+    //       setFormData(prev => ({
+    //         ...prev,
+    //         jampertemuan: "",
+    //       }));
+    //       break;
+    //     case "private":
+    //       setFormData(prev => ({
+    //         ...prev,
+    //         jampertemuanprivate1: "",
+    //         jampertemuanprivate2: "",
+    //       }));
+    //       break;
+    //     default:
+    //       setFormData(prev => ({
+    //         ...prev,
+    //         tipekamar: "",
+    //       }));
+    //   }
+    // }, [formData.paket]);
 
   // Ambil data dari sessionStorage jika ada
   useEffect(() => {
@@ -41,21 +68,21 @@ export default function ProgramPage() {
   // Handle perubahan input dan tablist
   // Handle tab paket
   const handleTabClick = (value: string | number) => {
-    const updatedFormData = { ...formData, paket: value };
+    const updatedFormData = { ...formData, paket: String(value) };
     setFormData(updatedFormData);
     sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
   };
 
   // Handle tab durasi paket
   const handleTabDurasiClick = (value: string | number) => {
-    const updatedFormData = { ...formData, paketdetail: value };
+    const updatedFormData = { ...formData, paketdetail: String(value) };
     setFormData(updatedFormData);
     sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
   };
 
   // Handle tab paket
   const handleTipeTabClick = (value: string | number) => {
-    const updatedFormData = { ...formData, tipekamar: value };
+    const updatedFormData = { ...formData, tipekamar: String(value) };
     setFormData(updatedFormData);
     sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
   };
@@ -67,35 +94,27 @@ export default function ProgramPage() {
     // Simpan data di sessionStorage
     sessionStorage.setItem("formData", JSON.stringify(formData));
 
-    // Redirect ke halaman program
-    const data = JSON.parse(sessionStorage.getItem("formData") || "{}");
-    const requiredFields = ["cabang", "periode", "paket", "paketdetail"];
-    
-    switch (data.paket) {
-      case "intergrated":
-        requiredFields.push("jampertemuan");
-        break;
-      case "private":
-        requiredFields.push("jampertemuanprivate1", "jampertemuanprivate2");
-        break;
-      default:
-        requiredFields.push("tipekamar");
-        break;
-    }
-    
-    const missingFields = requiredFields.filter(field => !data[field]);
-  
+    const { isValid, missingFields } = validateFormDataProgram(formData);
 
-    if (missingFields.length === 0) {
-      if (data.cabang === "PARE - JATIM") {
-        router.push("/pages/akomodasi");
-      } else {
-        router.push("/pages/konfirmasi");
-      }
+    if (isValid) {
+      // Jika validasi berhasil
+
+      // Cek cabang untuk navigasi
+        if (formData.cabang === "PARE - JATIM") {
+          router.push("/pages/akomodasi");
+        } else {
+          router.push("/pages/konfirmasi");
+        }
     } else {
-      alert("Mohon lengkapi data berikut: " + missingFields.join(", "));
-    };
+      // Jika ada field yang belum terisi
+       const missingLabels = missingFields.map((item) => item.label);
+           toast.error(
+             "Mohon lengkapi data berikut: " + missingLabels.join(", "),
+             { autoClose: 2000 }
+           );
+    }
   };
+
 
 
   // Options untuk dropdown
@@ -277,7 +296,7 @@ export default function ProgramPage() {
                       </div>
                     );
 
-                    default : // Untuk paket default lainnya
+                  default: // Untuk paket default lainnya
                     let options = [];
 
                     switch (formData.paket) {
@@ -301,18 +320,18 @@ export default function ProgramPage() {
                                   handleTipeTabClick(option.value);
 
                                   // Tentukan field mana yang diperbarui berdasarkan paket
-                                  const updatedFormData: FormData = (() => {
-                                    switch (formData.paket) {
-                                      case "intergrated":
-                                        return { ...formData, jampertemuan: option.value }; // Update jamPertemuan
-                                      default:
-                                        return { ...formData, tipekamar: option.value }; // Update tipeKamar
-                                    }
-                                  })();
+                                  // Update formData tanpa menggunakan FormData
+                                  const updatedFormData = {
+                                    ...formData,
+                                    ...(formData.paket === "intergrated"
+                                      ? { jampertemuan: option.value } // Update jampertemuan jika paket "intergrated"
+                                      : { tipekamar: option.value }), // Update tipeKamar untuk kasus lainnya
+                                  };
 
                                   // Simpan data ke state dan sessionStorage
                                   setFormData(updatedFormData);
                                   sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
+
 
                                   // Reset selectedTipe jika paket adalah intergrated
                                   setSelectedTipe(
@@ -343,10 +362,10 @@ export default function ProgramPage() {
                               return (
                                 selectedTipe && (
                                   <div className="lg:absolute lg:w-1/4 w-auto h-auto pt-4">
-                                  <p className="lg:text-left text-center text-xs text-gray-400">
-                                    {tipeKamar.find((item) => item.value === selectedTipe)?.desc || "-"}
-                                  </p>
-                                </div>
+                                    <p className="lg:text-left text-center text-xs text-gray-400">
+                                      {tipeKamar.find((item) => item.value === selectedTipe)?.desc || "-"}
+                                    </p>
+                                  </div>
                                 )
                               );
                           }
@@ -370,15 +389,15 @@ export default function ProgramPage() {
         </div>
         {/* Submit Button */}
         <div className="">
-        <div className="flex flex-col justify-center items-center">
-          <p className="text-gray-500 text-sm text-center pb-4">
-            Pastikan anda telah memilih program anda dengan baik & benar sebelum lanjut!
-          </p>
-          <div className="flex flex-row w-full gap-4">
-            <Button type="button" className="w-full bg-white border-2 border-main-color" onClick={() => router.push("/")}>Kembali</Button>
-            <Button type="submit" className="w-full">Lanjut!!</Button>
+          <div className="flex flex-col justify-center items-center">
+            <p className="text-gray-500 text-sm text-center pb-4">
+              Pastikan anda telah memilih program anda dengan baik & benar sebelum lanjut!
+            </p>
+            <div className="flex flex-row w-full gap-4">
+              <Button type="button" className="w-full bg-white border-2 border-main-color" onClick={() => router.push("/")}>Kembali</Button>
+              <Button type="submit" className="w-full">Lanjut!!</Button>
+            </div>
           </div>
-        </div>
         </div>
       </form>
     </CustomLayout>

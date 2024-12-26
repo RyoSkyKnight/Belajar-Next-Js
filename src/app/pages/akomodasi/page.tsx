@@ -8,15 +8,21 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Input from "@/app/_components/_partials/input";
 import TabList from "@/app/_components/_partials/tablist";
+import { validateFormDataAkomodasi } from "@/app/_backend/_utils/validation";
+import { toast } from "react-toastify";
 
-interface FormData {
-  [key: string]: string | number;
-}
 
 export default function ProgramPage() {
   const router = useRouter();
 
-  const [formData, setFormData] = useState<FormData>({}); // Default kosong
+  const [formData, setFormData] = useState({
+
+    lokasijemput: "",
+    kendaraan: "",
+    penumpang: "",
+    diskon: "",
+
+  }); // Default kosong 
 
   // Ambil data dari sessionStorage jika ada
   useEffect(() => {
@@ -50,16 +56,18 @@ export default function ProgramPage() {
       // Simpan data di sessionStorage
       sessionStorage.setItem("formData", JSON.stringify(formData));
   
-      // Redirect ke halaman program
-      const requiredFields = ["lokasijemput", "kendaraan", "penumpang"];
-      const missingFields = requiredFields.filter(field => !formData[field as keyof typeof formData]);
+       const { isValid, missingFields } = validateFormDataAkomodasi(formData);
       
-      if (missingFields.length === 0) {
-        router.push("/pages/konfirmasi");
-      } else {
-        alert("Mohon lengkapi data berikut: " + missingFields.join(", "));
-      };
-    };
+          if (isValid) {
+           router.push("/pages/program")
+          } else {  
+            const missingLabels = missingFields.map((item) => item.label);
+                toast.error(
+                  "Mohon lengkapi data berikut: " + missingLabels.join(", "),
+                  { autoClose: 2000 }
+                );
+         }
+       };
 
   // Options untuk dropdown
   const lokasiJemputOptions = [
