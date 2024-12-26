@@ -111,6 +111,14 @@ export default function CustomLayout({
         </div>
       </Link>
 
+      {/* <div className="fixed top-5  bg-opacity-90 text-white bg-black p-4 rounded shadow-lg">
+        <h3 className="font-bold mb-2">Session Storage Data:</h3>
+        <div className="text-sm">
+          <span className="font-semibold">formData:</span> {sessionStorage.getItem('formData')}
+        </div>
+      </div> */}
+
+
     </div>
   );
 }
