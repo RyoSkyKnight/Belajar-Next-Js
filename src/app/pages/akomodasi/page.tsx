@@ -67,7 +67,7 @@ export default function ProgramPage() {
        const { isValid, missingFields } = validateFormDataAkomodasi(formData);
       
           if (isValid) {
-           router.push("/pages/program")
+           router.push("/pages/konfirmasi")
           } else {  
             const missingLabels = missingFields.map((item) => item.label);
                 toast.error(
