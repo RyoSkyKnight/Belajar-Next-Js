@@ -11,11 +11,24 @@ import Label from "./_components/_partials/label";
 import TabList from "./_components/_partials/tablist";
 import { validateFormData } from "./_backend/_utils/validation";
 
+interface FromData {
+  nama: string;
+  email: string;
+  nomor: string | number;
+  gender: string;
+  umur: string;
+  kesibukan: string;
+  knowlcfrom: string;
+  ketentuan: boolean;
+  [key: string]: string | number | boolean;
+}
+
+
 export default function Page() {
   const router = useRouter();
 
   // State untuk menyimpan data form
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FromData>({
     nama: "",
     email: "",
     nomor: "",
@@ -34,16 +47,15 @@ export default function Page() {
     if (savedData) setFormData(JSON.parse(savedData));
   }, []);
 
-
-  // Handle perubahan input
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    const updatedFormData = { ...formData, [name]: value };
-
-    setFormData(updatedFormData);
-
-    // Simpan data di sessionStorage
-    sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
+  
+    // Update state secara asinkron dan sinkronkan dengan sessionStorage
+    setFormData((oldFormData) => {
+      const updatedFormData = { ...oldFormData, [name]: value };
+      sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
+      return updatedFormData;
+    });
   };
 
 

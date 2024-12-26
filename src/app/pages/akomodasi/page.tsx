@@ -11,11 +11,18 @@ import TabList from "@/app/_components/_partials/tablist";
 import { validateFormDataAkomodasi } from "@/app/_backend/_utils/validation";
 import { toast } from "react-toastify";
 
+interface FormData {
+  lokasijemput: string;
+  kendaraan: string;
+  penumpang: string;
+  diskon: string;
+  [key: string]: string;
+}
 
 export default function ProgramPage() {
   const router = useRouter();
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
 
     lokasijemput: "",
     kendaraan: "",
@@ -30,14 +37,15 @@ export default function ProgramPage() {
     if (savedData) setFormData(JSON.parse(savedData));
   }, []);
 
-  // Handle perubahan input
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    const updatedFormData = { ...formData, [name]: value };
-    setFormData(updatedFormData);
-
-    // Simpan data di sessionStorage
-    sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
+  
+    // Update state secara asinkron dan sinkronkan dengan sessionStorage
+    setFormData((oldFormData) => {
+      const updatedFormData = { ...oldFormData, [name]: value };
+      sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
+      return updatedFormData;
+    });
   };
 
 

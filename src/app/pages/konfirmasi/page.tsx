@@ -7,7 +7,15 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 interface FormData {
-  [key: string]: string | number;
+  [key: string]: string | number | { label: string } | undefined;
+  paket?: { label: string };
+  paketdetail?: { label: string };
+  nomor?: string | number;
+  nama?: string | number;
+  email?: string
+  gender?: string;
+  kesibukan?: string;
+
 }
 export default function KonfirmasiPage() {
   const router = useRouter();
@@ -20,7 +28,7 @@ export default function KonfirmasiPage() {
     if (savedData) setFormData(JSON.parse(savedData));
   }, []);
 
-  function capitalizeFirstLetter(val: string | number) {
+  function capitalizeFirstLetter(val: string | number | undefined) {
     if (val === null || val === undefined) return val; // Return the value as is if it's null or undefined
     return String(val).charAt(0).toUpperCase() + String(val).slice(1);
   }
@@ -30,7 +38,8 @@ export default function KonfirmasiPage() {
       mainline="Tinggal selangkah lagi menuju kesuksesan! 🚀"
       line="Konfirmasi dulu biar gak ada kekeliruan nanti {'<3'} ! 😍 #InggrisItuSeru #BelajarSeruLC"
     >
-      <div className="mx-auto flex flex-col space-y-10 lg:space-y-20">
+      <div
+        className={`mx-auto flex flex-col space-y-10 ${ formData.cabang === "PARE - JATIM" ? "lg:space-y-20" : "lg:space-y-28" }`} >
         {/* Main Content */}
         <div className="w-full mx-auto rounded-3xl lg:border lg:border-gray-400 bg-white p-2 lg:py-3 lg:px-6 h-auto">
           <h2 className="mb-4 text-center text-black text-xl font-bold">Ringkasan Pembayaran</h2>
@@ -72,14 +81,18 @@ export default function KonfirmasiPage() {
             <div className="space-y-3 text-[14px]">
               <div className="flex justify-between text-gray-600">
                 <span>
-                  Paket {formData.paket} {formData.paketdetail}
+                  Paket {formData.paket?.label || ''} {formData.paketdetail?.label || ''}
                 </span>
                 <span>Rp. 9.000.000</span>
               </div>
-              <div className="flex justify-between text-gray-600">
-                <span>Biaya Tambahan</span>
-                <span>Rp. 900.000</span>
-              </div>
+              {
+                formData.cabang === "PARE - JATIM" ? (
+                  <div className="flex justify-between text-gray-600">
+                    <span>Biaya Tambahan</span>
+                    <span>Rp. 900.000</span>
+                  </div>
+                ) : []
+              }
               <div className="flex justify-between text-gray-600">
                 <span>Biaya Admin</span>
                 <span>Rp. 60.000</span>

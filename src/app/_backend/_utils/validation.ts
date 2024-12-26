@@ -18,7 +18,7 @@ export const validateFormData = (formData: { [key: string]: string | number | bo
     };
   };
 
-  export const validateFormDataProgram = (formData: { [key: string]: string | number | boolean }) => {
+  export const validateFormDataProgram = (formData: { [key: string]: string | number | boolean | { value: string; label: string } }) => {
 
     const requiredFields = [
         { field: "cabang", label: "Cabang" },

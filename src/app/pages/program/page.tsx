@@ -10,15 +10,26 @@ import TabList from "@/app/_components/_partials/tablist";
 import { validateFormDataProgram } from "@/app/_backend/_utils/validation";
 import { toast } from "react-toastify";
 
+interface FormData {
+  cabang: string;
+  periode: string;
+  paket: { value: string; label: string };
+  paketdetail: { value: string; label: string };
+  jampertemuanprivate1: string;
+  jampertemuanprivate2: string;
+  jampertemuan: string;
+  tipekamar: string;
+  [key: string]: string | number | boolean | { value: string; label: string };
+}
 
 export default function ProgramPage() {
   const router = useRouter();
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     cabang: '',
     periode: '',
-    paket: '',
-    paketdetail: '',
+    paket: { value : '', label: '' },
+    paketdetail: { value : '', label: '' },
     jampertemuanprivate1: '',
     jampertemuanprivate2: '',
     jampertemuan: '',
@@ -55,33 +66,36 @@ export default function ProgramPage() {
     if (savedData) setFormData(JSON.parse(savedData));
   }, []);
 
-  // Handle perubahan input
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    const updatedFormData = { ...formData, [name]: value };
-    setFormData(updatedFormData);
+ const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const { name, value } = e.target;
 
-    // Simpan data di sessionStorage
+  // Update state secara asinkron dan sinkronkan dengan sessionStorage
+  setFormData((oldFormData) => {
+    const updatedFormData = { ...oldFormData, [name]: value };
     sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
-  };
+    return updatedFormData;
+  });
+};
+
 
   // Handle perubahan input dan tablist
   // Handle tab paket
-  const handleTabClick = (value: string | number) => {
-    const updatedFormData = { ...formData, paket: String(value) };
+  const handleTabClick = (value: string, label: string) => {
+    const updatedFormData = { ...formData, paket: { value, label } };
     setFormData(updatedFormData);
     sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
   };
+  
 
   // Handle tab durasi paket
-  const handleTabDurasiClick = (value: string | number) => {
-    const updatedFormData = { ...formData, paketdetail: String(value) };
+  const handleTabDurasiClick = (value: string, label: string) => {
+    const updatedFormData = { ...formData, paketdetail: { value, label } }; 
     setFormData(updatedFormData);
     sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
   };
 
   // Handle tab paket
-  const handleTipeTabClick = (value: string | number) => {
+  const handleOptionTabClick = (value: string | number) => {
     const updatedFormData = { ...formData, tipekamar: String(value) };
     setFormData(updatedFormData);
     sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
@@ -218,11 +232,11 @@ export default function ProgramPage() {
               <ul className="lg:flex lg:flex-row lg:flex-wrap max-w-full gap-4 grid grid-cols-2 ">
                 {paketTabList.map((item) => (
                   <TabList
-                    key={item.value}
-                    label={item.label}
-                    value={item.value}
-                    onClick={handleTabClick}
-                    isActive={formData.paket === item.value}
+                  key={item.value}
+                  label={item.label}
+                  value={item.value}
+                  onClick={() => handleTabClick(item.value, item.label)} // Pass the full item
+                  isActive={formData.paket?.value === item.value}
                   />
                 ))}
               </ul>
@@ -243,8 +257,8 @@ export default function ProgramPage() {
                     key={item.value}
                     label={item.label}
                     value={item.value}
-                    onClick={handleTabDurasiClick}
-                    isActive={formData.paketdetail === item.value}
+                    onClick={() => handleTabDurasiClick(item.value, item.label)} 
+                    isActive={formData.paketdetail?.value === item.value}
                   />
 
                 ))}
@@ -260,7 +274,7 @@ export default function ProgramPage() {
               {/* Gunakan switch untuk menentukan label */}
               <Label htmlFor="tipekamar" required>
                 {(() => {
-                  switch (formData.paket) {
+                  switch (formData.paket?.value) {
                     case "intergrated":
                     case "private":
                       return "Pilih Jam Pertemuan"; // Untuk paket intergrated dan private
@@ -272,7 +286,7 @@ export default function ProgramPage() {
 
               {/* Menampilkan opsi sesuai dengan paket */}
               {(() => {
-                switch (formData.paket) {
+                switch (formData.paket?.value) {
                   case "private":
                     return (
                       <div className="w-full flex flex-col space-y-2 lg:flex-row lg:space-x-4 lg:space-y-0">
@@ -298,7 +312,7 @@ export default function ProgramPage() {
                   default: // Untuk paket default lainnya
                     let options = [];
 
-                    switch (formData.paket) {
+                    switch (formData.paket?.value) {
                       case "intergrated":
                         options = jamPertemuan; // Opsi untuk jam pertemuan untuk paket intergrated
                         break;
@@ -316,16 +330,26 @@ export default function ProgramPage() {
                                 label={option.label}
                                 value={option.value}
                                 onClick={() => {
-                                  handleTipeTabClick(option.value);
+                                  handleOptionTabClick(option.value);
 
                                   // Tentukan field mana yang diperbarui berdasarkan paket
                                   // Update formData tanpa menggunakan FormData
-                                  const updatedFormData = {
-                                    ...formData,
-                                    ...(formData.paket === "intergrated"
-                                      ? { jampertemuan: option.value } // Update jampertemuan jika paket "intergrated"
-                                      : { tipekamar: option.value }), // Update tipeKamar untuk kasus lainnya
-                                  };
+                                  const updatedFormData = (() => {
+                                    const updatedData = { ...formData };
+                                  
+                                    switch (formData.paket?.value) {
+                                      case "intergrated":
+                                        updatedData.jampertemuan = option.value; // Update jampertemuan jika paket "intergrated"
+                                        break;
+                                  
+                                      default:
+                                        updatedData.tipekamar = option.value; // Update tipeKamar untuk kasus lainnya
+                                        break;
+                                    }
+                                  
+                                    return updatedData;
+                                  })();
+                                  
 
                                   // Simpan data ke state dan sessionStorage
                                   setFormData(updatedFormData);
@@ -334,12 +358,12 @@ export default function ProgramPage() {
 
                                   // Reset selectedTipe jika paket adalah intergrated
                                   setSelectedTipe(
-                                    formData.paket === "intergrated" ? null : (option.value as string)
+                                    formData.paket.value === "intergrated" ? null : (option.value as string)
                                   );
                                 }}
                                 isActive={
                                   (() => {
-                                    switch (formData.paket) {
+                                    switch (formData.paket?.value) {
                                       case "intergrated":
                                         return formData.jampertemuan === option.value; // Aktif untuk jamPertemuan
                                       default:
@@ -354,7 +378,7 @@ export default function ProgramPage() {
 
                         {/* Tampilkan deskripsi jika paket bukan intergrated */}
                         {(() => {
-                          switch (formData.paket) {
+                          switch (formData.paket?.value) {
                             case "intergrated":
                               return null; // Tidak ada deskripsi untuk paket intergrated
                             default:

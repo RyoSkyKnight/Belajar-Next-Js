@@ -6,7 +6,27 @@ import { useEffect, useState } from "react";
 
 const Navbar = () => {
   const pathname = usePathname();
+  interface FormDataType {
+    nama?: string;
+    email?: string;
+    nomor?: string;
+    gender?: string;
+    kesibukan?: string;
+    knowlcfrom?: string;
+    cabang?: string;
+    periode?: string;
+    paket?: { value: string; label: string };
+    paketdetail?: { value: string; label: string };
+    jampertemuan?: string;
+    jampertemuanprivate1?: string;
+    jampertemuanprivate2?: string;
+    tipekamar?: string;
+    lokasijemput?: string;
+    kendaraan?: string;
+  }
 
+  const [formData, setFormData] = useState<FormDataType>({});
+  const [akomodasi, setAkomodasi] = useState("");
   const [completedSteps, setCompletedSteps] = useState<{
     [key: string]: boolean;
   }>({
@@ -14,8 +34,6 @@ const Navbar = () => {
     program: false,
     akomodasi: false,
   });
-
-  const [formData, setFormData] = useState<{ [key: string]: string | number }>({});
 
   enum ReferrerEnum {
     DataDiri = 0,
@@ -45,50 +63,55 @@ const Navbar = () => {
 
   const currentPathEnum = getActiveStatus(pathname);
 
-  // Update `completedSteps` whenever `formData` changes
+  // Load initial data from sessionStorage
+  useEffect(() => {
+    const savedData = sessionStorage.getItem("formData");
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+      setFormData(parsedData);
+    }
+  }, []);
+
+useEffect(() => {
+  setAkomodasi(String(formData?.cabang || ""));
+}, [formData.cabang]);
+
+  // Update completedSteps whenever formData changes
   useEffect(() => {
     setCompletedSteps({
       dataDiri: Boolean(
-        formData.nama &&
-          formData.email &&
-          formData.nomor &&
-          formData.gender &&
-          formData.kesibukan &&
-          formData.knowlcfrom
+      formData.nama &&
+        formData.email &&
+        formData.nomor &&
+        formData.gender &&
+        formData.kesibukan &&
+        formData.knowlcfrom
       ),
       program: Boolean(
-        formData.cabang &&
-          formData.periode &&
-          formData.paket &&
-          formData.paketdetail &&
-          (() => {
-            switch (formData.paket) {
-              case "intergrated":
-                return formData.jampertemuan;
-              case "private":
-                return formData.jampertemuanprivate1 && formData.jampertemuanprivate2;
-              default:
-                return formData.tipekamar;
-            }
-          })()
+      formData.cabang &&
+        formData.periode &&
+        formData.paket?.value &&  // Check if paket exists and has value
+        formData.paketdetail &&
+        (() => {  
+        switch (formData.paket?.value) {
+          case "intergrated":
+          return formData.jampertemuan;
+          case "private":
+          return formData.jampertemuanprivate1 && formData.jampertemuanprivate2;
+          default:
+          return formData.tipekamar;
+        }
+        })()
       ),
       akomodasi: Boolean(
-        formData.cabang  === "PARE - JATIM" &&
-        formData.lokasijemput && 
-        formData.kendaraan
+      formData.cabang === "PARE - JATIM" &&
+      formData.lokasijemput && 
+      formData.kendaraan
       ),
     });
   }, [formData]);
 
-  // Load initial data from sessionStorage
-  useEffect(() => {
-      const savedData = sessionStorage.getItem("formData");
-      if (savedData) {
-        setFormData(JSON.parse(savedData));
-      }
-  }, []);
-
-  const navItems = [
+  const baseNavItems = [
     {
       label: "Data Diri",
       path: "/",
@@ -102,29 +125,33 @@ const Navbar = () => {
       step: "program",
       enabled: completedSteps.dataDiri,
       enumValue: ReferrerEnum.Program,
-    },
-    ...(formData?.cabang === "PARE - JATIM" && completedSteps.program && completedSteps.dataDiri
-      ? [
-          {
-            label: "Akomodasi",
-            path: "/pages/akomodasi",
-            step: "akomodasi",
-            enabled: completedSteps.program && completedSteps.dataDiri,
-            enumValue: ReferrerEnum.Akomodasi,
-          },
-        ]
-      : []),
+    }
+  ];
+
+  const akomodasiItem = akomodasi === "PARE - JATIM" ? [
+    {
+      label: "Akomodasi",
+      path: "/pages/akomodasi",
+      step: "akomodasi",
+      enabled: completedSteps.program && completedSteps.dataDiri,
+      enumValue: ReferrerEnum.Akomodasi,
+    }
+  ] : [];
+
+  const konfirmasiItem = [
     {
       label: "Konfirmasi",
       path: "/pages/konfirmasi",
       step: "konfirmasi",
       enabled:
-        formData?.cabang === "PARE - JATIM"
+        akomodasi === "PARE - JATIM"
           ? completedSteps.akomodasi && completedSteps.program && completedSteps.dataDiri
           : completedSteps.program && completedSteps.dataDiri,
       enumValue: ReferrerEnum.Konfirmasi,
-    },
+    }
   ];
+
+  const navItems = [...baseNavItems, ...akomodasiItem, ...konfirmasiItem];
 
   return (
     <nav className="w-full mx-auto lg:max-w-5 pt-5 px-6">
