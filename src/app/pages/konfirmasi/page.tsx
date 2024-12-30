@@ -119,7 +119,7 @@ export default function KonfirmasiPage() {
               </div>
               <div className="space-y-2">
                 <div className="flex items-center text-[14px]">
-                  <span className="w-24 text-gray-500">Gender</span>
+                  <span className="w-24 text-gray-500">Jenis Kelamin</span>
                   <span className="text-gray-700">: {capitalizeFirstLetter(formData.gender) || "Belum diisi"}</span>
                 </div>
                 <div className="flex items-center text-[14px]">
