@@ -3,28 +3,28 @@ import { useState } from 'react';
 import { FaStar } from "react-icons/fa";
 import Button from './button';
 
-interface FeedbackPopupProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
 
-const FeedbackPopup: React.FC<FeedbackPopupProps> = ({ isOpen, onClose }) => {
+
+const FeedbackPopup: React.FC = () => {
   const [rating, setRating] = useState<number | null>(null);
   const [hover, setHover] = useState<number | null>(null);
   const [feedback, setFeedback] = useState<string>("");
+  const [isPopupOpen, setIsPopupOpen] = useState<boolean>(true);
+
+  
 
   const handleRating = (rate: number) => {
     setRating(rate);
   };
 
   const handleSkip = () => {
-    onClose(); // Close popup
+    setIsPopupOpen(false); // Close popup
     console.log("Skipped Feedback");
   };
 
   const handleSubmit = () => {
     console.log("Feedback Submitted:", { rating, feedback });
-    onClose(); // Close popup after submission
+    setIsPopupOpen(false); // Close popup after submission
   };
 
     const handleFeedbackChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -35,19 +35,19 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({ isOpen, onClose }) => {
     <>
 
       {/* Popup Content */}
-      {isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="relative bg-white rounded-lg shadow-lg p-6 w-[90%] max-w-md">
+      {isPopupOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-end lg:items-center z-50">
+          <div className="absolute bottom-0 bg-white rounded-lg shadow-lg p-6 lg:w-[90%] w-full max-w-md">
             {/* Skip Button */}
             <div className="flex flex-row justify-between w-full px-1">
 
 
             {/* Title */}
-            <h3 className="text-xl text-gray-800">Customer Feedback</h3>
+            <h3 className="text-base text-gray-800">Customer Feedback</h3>
 
 
             <button
-              className=" text-main-color hover:text-gray-800 transition"
+              className=" text-main-color lg:text-base text-xs hover:text-gray-800 transition"
               onClick={handleSkip}
             >
               Skip

@@ -20,6 +20,8 @@ export const validateFormData = (formData: { [key: string]: string | number | bo
 
   export const validateFormDataProgram = (formData: { [key: string]: string | number | boolean | { value: string; label: string } }) => {
 
+    const savedData = JSON.parse(sessionStorage.getItem("formData") || "{}");
+
     const requiredFields = [
         { field: "cabang", label: "Cabang" },
         { field: "periode", label: "Periode" },
@@ -28,7 +30,7 @@ export const validateFormData = (formData: { [key: string]: string | number | bo
       ];
       
       // Tambahkan field berdasarkan nilai `data.paket`
-      switch (formData.paket) {
+      switch (savedData?.paket?.value) {
         case "intergrated":
           requiredFields.push(
             { field: "jampertemuan", label: "Jam Pertemuan" }
@@ -66,6 +68,22 @@ export const validateFormData = (formData: { [key: string]: string | number | bo
         { field: "lokasijemput", label: "Penjemputan" },
         { field: "kendaraan", label: "Kendaraan" },
         { field: "penumpang", label: "Banyak Penumpang" },
+      ];
+      const missingFields = requiredFields.filter(
+        (item) => !formData[item.field as keyof typeof formData]
+      );
+  
+    return {
+      isValid: missingFields.length === 0,
+      missingFields,
+    };
+  };
+
+
+  export const validateFormDataKonfirmasi = (formData: { [key: string]: string | number | { label : string }  }) => {
+    
+    const requiredFields = [
+        { field: "paymentmethod", label: "Pembayaran" },
       ];
       const missingFields = requiredFields.filter(
         (item) => !formData[item.field as keyof typeof formData]

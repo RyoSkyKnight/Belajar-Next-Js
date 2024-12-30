@@ -132,7 +132,7 @@ function TagDescription({
 }) {
   return (
     <div className="my-4 text-center w-full mx-auto">
-      <p className="font-bold text-black lg:text-base text-sm text-center">{mainline} <span> <br />  </span> <span className="text-gray-500 font-normal lg:text-base text-xs">{line}</span> </p>
+      <p className="font-bold text-black lg:text-base text-sm text-center">{mainline} <span> <br />  </span> <span className="text-gray-500 font-normal lg:text-base text-xs">{line || ''}</span> </p>
     </div>
   );
 }
