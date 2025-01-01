@@ -7,8 +7,8 @@ import Label from "@/app/_components/_partials/label";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Input from "@/app/_components/_partials/input";
-import TabList from "@/app/_components/_partials/tablist";
-import { validateFormDataAkomodasi } from "@/app/_backend/_utils/validation";
+import  TabList  from "@/app/_components/_partials/tablist";
+import { validateFormDataAkomodasi } from "@/app/_backend/_utils/validationAlert";
 import { toast } from "react-toastify";
 
 interface FormData {
@@ -23,12 +23,10 @@ export default function ProgramPage() {
   const router = useRouter();
 
   const [formData, setFormData] = useState<FormData>({
-
-    lokasijemput: "",
+    lokasijemput: "ga_perlu_dijemput",
     kendaraan: "",
     penumpang: "",
     diskon: "",
-
   }); // Default kosong 
 
   // Ambil data dari sessionStorage jika ada
@@ -78,6 +76,7 @@ export default function ProgramPage() {
 
   // Options untuk dropdown
   const lokasiJemputOptions = [
+    { value: "ga_perlu_dijemput", label: "Ga Perlu Dijemput" },
     { value: "bandara_dhoho_kediri", label: "Bandara Dhoho Kediri" },
     { value: "bandara_juanda_surabaya", label: "Bandara Juanda Surabaya" },
     { value: "stasiun_jombang", label: "Stasiun Jombang" },
@@ -103,21 +102,21 @@ export default function ProgramPage() {
        <div className="flex flex-col space-y-4 min-h-[320px] h-full">
 
         <div className="flex flex-col space-y-2">
-          <Label htmlFor="lokasijemput" required>Pilih Penjemputan :</Label>
+          <Label htmlFor="lokasijemput">Pilih Penjemputan :</Label>
           <Select
             name="lokasijemput"
             options={lokasiJemputOptions}
-            value={formData.lokasijemput || ""}
+            value={formData.lokasijemput || "ga_perlu_dijemput"}
             onChange={handleChange}
-            required
+          
           />
         </div>
 
-        {/* Select Cabang dan Periode */}
+       <div className={formData.lokasijemput === "ga_perlu_dijemput" ? "hidden" : "block"}>
         <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
 
           <div className="w-full md:w-1/2 flex flex-col space-y-2">
-            <Label htmlFor="kendaraan" required>Pilih Tipe Kendaraan :</Label>
+            <Label htmlFor="kendaraan">Pilih Tipe Kendaraan :</Label>
             <div className="lg:overflow-y-auto scroll-hidden ">
 
                 <ul className="lg:flex lg:flex-row lg:space-x-4 grid :grid-cols-auto-fit grid-cols-2 gap-4 lg:gap-0">
@@ -137,16 +136,17 @@ export default function ProgramPage() {
           </div>
 
           <div className="w-full md:w-1/2 flex flex-col space-y-2">
-            <Label htmlFor="penumpang" required>Banyak Penumpang :</Label>
+            <Label htmlFor="penumpang">Banyak Penumpang :</Label>
             <Select
               name="penumpang"
               options={penumpangOptions}
               value={formData.penumpang || ""}
               onChange={handleChange}
-              required
+            
             />
           </div>
         </div>
+      </div>
 
         <div className="flex flex-col lg:flex-row justify-between w-full space-y-4 lg:space-y-0">
           <div className="flex flex-col space-y-2 w-full md:w-1/3">
@@ -159,11 +159,13 @@ export default function ProgramPage() {
               onChange={handleChange}
             />
           </div>
-
-          <div className="flex flex-col justify-center items-center w-full lg:pt-0 lg:w-1/4">
-              <h2 className="text-center text-black font-semibold text-sm pb-2">Total Harga :</h2>
-              <h2 className="bg-bill text-center text-white py-2 px-6 rounded-[10px]">Rp 900.000</h2>
-            </div>
+          
+          <div className={formData.lokasijemput === "ga_perlu_dijemput" ? "hidden" : "block"}>
+               <div className="flex flex-col justify-center items-center w-full lg:pt-0 lg:w-1/4">
+                <h2 className="text-center text-black font-semibold text-sm pb-2">Biaya Akomodasi :</h2>
+                <h2 className="bg-bill text-center text-white py-2 px-6 rounded-[10px]">Rp 900.000</h2>
+              </div>
+          </div>
         </div>
 
   </div>
@@ -171,7 +173,7 @@ export default function ProgramPage() {
         <div className="">
         <div className="flex flex-col justify-center items-center">
           <p className="text-gray-500 text-sm text-center pb-4">
-            Biaya penjemputan & kamar akan di tambahkan dengan biaya program sebelumnya!
+            Biaya akomodasi akan di tambahkan dengan biaya program sebelumnya!
           </p>
            <div className="flex flex-row w-full gap-4">
                       <Button type="button" className="w-full bg-white border-2 border-main-color" onClick={() => router.push("/pages/program")}>Kembali</Button>

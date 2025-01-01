@@ -4,7 +4,7 @@ import SuccessGif from "@/app/_components/_assets/success.gif";
 
 export default function ThankYou() {
   return (
-    <div className="w-full min-h-screen flex flex-col items-center justify-center p-4">
+    <div className="w-full min-h-screen flex flex-col lg:items-center md:items-center p-4">
       <FeedbackPopup />
 
       <Image

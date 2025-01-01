@@ -7,7 +7,7 @@ interface LabelProps {
     required?: boolean;
 }
 
-const Label = ({ htmlFor, children, className = '', required = false }: LabelProps) => {
+export default function Label({ htmlFor, children, className = '', required = false }: LabelProps){
     return (
         <label
             htmlFor={htmlFor}
@@ -18,5 +18,3 @@ const Label = ({ htmlFor, children, className = '', required = false }: LabelPro
         </label>
     );
 };
-
-export default Label;

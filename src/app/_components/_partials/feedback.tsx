@@ -1,17 +1,15 @@
 "use client";
+
 import { useState } from 'react';
 import { FaStar } from "react-icons/fa";
 import Button from './button';
 
 
-
-const FeedbackPopup: React.FC = () => {
+export default function FeedbackPopup({}) {
   const [rating, setRating] = useState<number | null>(null);
   const [hover, setHover] = useState<number | null>(null);
   const [feedback, setFeedback] = useState<string>("");
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(true);
-
-  
 
   const handleRating = (rate: number) => {
     setRating(rate);
@@ -27,32 +25,27 @@ const FeedbackPopup: React.FC = () => {
     setIsPopupOpen(false); // Close popup after submission
   };
 
-    const handleFeedbackChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setFeedback(event.target.value);
-    };
+  const handleFeedbackChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setFeedback(event.target.value);
+  };
 
   return (
     <>
-
       {/* Popup Content */}
       {isPopupOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-end lg:items-center z-50">
-          <div className="absolute bottom-0 bg-white rounded-lg shadow-lg p-6 lg:w-[90%] w-full max-w-md">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="absolute bottom-0 lg:bottom-1/4 bg-white rounded-lg shadow-lg p-6 w-full lg:max-w-md">
             {/* Skip Button */}
             <div className="flex flex-row justify-between w-full px-1">
+              {/* Title */}
+              <h3 className="text-base text-gray-800">Customer Feedback</h3>
 
-
-            {/* Title */}
-            <h3 className="text-base text-gray-800">Customer Feedback</h3>
-
-
-            <button
-              className=" text-main-color lg:text-base text-xs hover:text-gray-800 transition"
-              onClick={handleSkip}
-            >
-              Skip
-            </button>
-
+              <button
+                className="text-main-color lg:text-base text-xs hover:text-gray-800 transition"
+                onClick={handleSkip}
+              >
+                Skip
+              </button>
             </div>
           
             {/* Star Rating */}
@@ -69,7 +62,7 @@ const FeedbackPopup: React.FC = () => {
                       onClick={() => handleRating(ratingValue)}
                     />
                     <FaStar
-                      className="transition-colors duration-200 "
+                      className="transition-colors duration-200"
                       size={40}
                       color={
                         ratingValue <= (hover || rating || 0) ? "#FACC14" : "#e4e5e9"
@@ -102,8 +95,5 @@ const FeedbackPopup: React.FC = () => {
       )}
     </>
   );
-};
-
-export default FeedbackPopup;
-
+}
 

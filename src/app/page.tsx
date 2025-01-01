@@ -9,7 +9,8 @@ import Select from "./_components/_partials/select";
 import Button from "./_components/_partials/button";
 import Label from "./_components/_partials/label";
 import TabList from "./_components/_partials/tablist";
-import { validateFormData } from "./_backend/_utils/validation";
+import { validateFormData } from "./_backend/_utils/validationAlert";
+import { dataDiriSchema } from "./_backend/_utils/validationZod";
 
 interface FromData {
   nama: string;
@@ -27,6 +28,8 @@ interface FromData {
 export default function Page() {
   const router = useRouter();
 
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
   // State untuk menyimpan data form
   const [formData, setFormData] = useState<FromData>({
     nama: "",
@@ -39,17 +42,51 @@ export default function Page() {
     ketentuan: false,
   });
 
-
-
   // Ambil data dari sessionStorage jika ada
   useEffect(() => {
     const savedData = sessionStorage.getItem("formData");
     if (savedData) setFormData(JSON.parse(savedData));
   }, []);
 
+
+  // Handle submit form
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const result = dataDiriSchema.safeParse(formData);
+    if (!result.success) {
+      const fieldErrors: { [key: string]: string } = {};
+      result.error.errors.forEach((err) => {
+        fieldErrors[err.path[0]] = err.message;
+      });
+      setErrors(fieldErrors);
+    } else {
+      setErrors({});
+      console.log("Validasi Berhasil:", formData);
+    }
+
+    // Simpan data di sessionStorage
+    sessionStorage.setItem("formData", JSON.stringify(formData));
+
+    // Redirect ke halaman program
+    const { isValid, missingFields } = validateFormData(formData);
+
+    if (isValid) {
+      router.push("/pages/program")
+    } else {
+      const missingLabels = missingFields.map((item) => item.label);
+      toast.error(
+        "Mohon lengkapi data berikut: " + missingLabels.join(", ")
+      );
+    }
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-  
+
+    // Reset error untuk field yang sedang diubah
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+
     // Update state secara asinkron dan sinkronkan dengan sessionStorage
     setFormData((oldFormData) => {
       const updatedFormData = { ...oldFormData, [name]: value };
@@ -60,31 +97,13 @@ export default function Page() {
 
 
   const handleTabClick = (value: string | number) => {
+    setErrors((prevErrors) => ({ ...prevErrors, gender : "" }));
+
     const updatedFormData = { ...formData, gender: String(value) };
     setFormData(updatedFormData);
     sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
   };
 
-
-  // Handle submit form
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    // Simpan data di sessionStorage
-    sessionStorage.setItem("formData", JSON.stringify(formData));
-
-    // Redirect ke halaman program
-    const { isValid, missingFields } = validateFormData(formData);
-
-    if (isValid) {
-     router.push("/pages/program")
-    } else {
-      const missingLabels = missingFields.map((item) => item.label);
-      toast.error(
-        "Mohon lengkapi data berikut: " + missingLabels.join(", ")
-      );
-    }
-  };
 
   // Options untuk dropdown
   const genderOptions = [
@@ -132,8 +151,10 @@ export default function Page() {
               placeholder="Masukan nama lengkap anda"
               value={formData.nama}
               onChange={handleChange}
-              required
+              className={` ${errors.nama ? 'border-red-500' : ''} `}
             />
+
+            {errors.nama && <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">{errors.nama}</p>}
           </div>
 
           {/* Input Email dan Nomor WhatsApp */}
@@ -146,9 +167,13 @@ export default function Page() {
                 placeholder="youremail@gmail.com"
                 value={formData.email}
                 onChange={handleChange}
-                required
+                className={` ${errors.email ? 'border-red-500' : ''} `}
               />
+
+              {errors.email && <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">{errors.email}</p>}
+
             </div>
+
             <div className="flex flex-col space-y-2 w-full md:w-1/2">
               <Label htmlFor="nomor" required>Nomor WhatsApp :</Label>
               <Input
@@ -162,44 +187,40 @@ export default function Page() {
                     handleChange(e); // Lanjutkan hanya jika input valid
                   }
                 }}
-                required
+                className={` ${errors.nomor ? 'border-red-500' : ''} `}
               />
+
+              {errors.nomor && <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">{errors.nomor}</p>}
+
             </div>
           </div>
 
           {/* Select Gender dan Kesibukan */}
           <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
 
-            {/* <div className="w-full md:w-1/2 flex flex-col space-y-2">
-            <Label htmlFor="gender" required>Jenis Kelamin :</Label>
-            <Select
-              name="gender"
-              options={genderOptions}
-              value={formData.gender}
-              onChange={handleChange}
-              required
-            />
-          </div> */}
 
             <div className="w-full flex flex-col space-y-2 md:w-1/2">
               <Label htmlFor="gender" required>Jenis Kelamin:</Label>
 
-              <div className="lg:overflow-y-auto scroll-hidden ">
 
-                <ul className=" lg:flex lg:flex-row lg:space-x-4 grid :grid-cols-auto-fit grid-cols-2 gap-4 lg:gap-0">
 
-                  {genderOptions.map((item) => (
-                    <TabList
-                      className="w-full"
-                      key={item.value}
-                      label={item.label}
-                      value={item.value}
-                      onClick={handleTabClick}
-                      isActive={formData.gender === item.value}
-                    />
-                  ))}
-                </ul>
-              </div>
+              <ul className=" lg:flex lg:flex-row lg:space-x-4 grid :grid-cols-auto-fit grid-cols-2 gap-4 lg:gap-0">
+
+                {genderOptions.map((item) => (
+                  <TabList
+                    key={item.value}
+                    label={item.label}
+                    value={item.value}
+                    onClick={handleTabClick}
+                    isActive={formData.gender === item.value}
+                    className={` ${errors.gender ? 'border-red-500' : ''} `}
+                  />
+                ))}
+              </ul>
+
+              {errors.gender && <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">{errors.gender}</p>}
+
+
             </div>
 
             <div className="w-full md:w-1/2 flex flex-col space-y-2">
@@ -209,8 +230,11 @@ export default function Page() {
                 options={umurOptions}
                 value={formData.umur}
                 onChange={handleChange}
-                required
+                className={` ${errors.umur ? 'border-red-500' : ''} `}
               />
+
+              {errors.umur && <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">{errors.umur}</p>}
+
             </div>
 
           </div>
@@ -223,8 +247,11 @@ export default function Page() {
                 options={kesibukanOptions}
                 value={formData.kesibukan}
                 onChange={handleChange}
-                required
+                className={` ${errors.kesibukan ? 'border-red-500' : ''} `}
               />
+
+              {errors.kesibukan && <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">{errors.kesibukan}</p>}
+
             </div>
 
             {/* Select Know LC From */}
@@ -235,8 +262,11 @@ export default function Page() {
                 options={knowLCFromOptions}
                 value={formData.knowlcfrom}
                 onChange={handleChange}
-                required
+                className={` ${errors.knowlcfrom ? 'border-red-500' : ''} `}
               />
+
+              {errors.knowlcfrom && <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">{errors.knowlcfrom}</p>}
+
             </div>
           </div>
         </div>

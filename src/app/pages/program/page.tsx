@@ -7,8 +7,9 @@ import Label from "@/app/_components/_partials/label";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import TabList from "@/app/_components/_partials/tablist";
-import { validateFormDataProgram } from "@/app/_backend/_utils/validation";
+import { validateFormDataProgram } from "@/app/_backend/_utils/validationAlert";
 import { toast } from "react-toastify";
+import { programSchema } from "@/app/_backend/_utils/validationZod";
 
 interface FormData {
   cabang: string;
@@ -25,11 +26,15 @@ interface FormData {
 export default function ProgramPage() {
   const router = useRouter();
 
+
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+
   const [formData, setFormData] = useState<FormData>({
     cabang: '',
     periode: '',
-    paket: { value : '', label: '' },
-    paketdetail: { value : '', label: '' },
+    paket: { value: '', label: '' },
+    paketdetail: { value: '', label: '' },
     jampertemuanprivate1: '',
     jampertemuanprivate2: '',
     jampertemuan: '',
@@ -37,74 +42,28 @@ export default function ProgramPage() {
   }); // Default kosong
 
 
-    // useEffect(() => {
-    //   switch (formData.paket) {
-    //     case "intergrated":
-    //       setFormData(prev => ({
-    //         ...prev,
-    //         jampertemuan: "",
-    //       }));
-    //       break;
-    //     case "private":
-    //       setFormData(prev => ({
-    //         ...prev,
-    //         jampertemuanprivate1: "",
-    //         jampertemuanprivate2: "",
-    //       }));
-    //       break;
-    //     default:
-    //       setFormData(prev => ({
-    //         ...prev,
-    //         tipekamar: "",
-    //       }));
-    //   }
-    // }, [formData.paket]);
-
   // Ambil data dari sessionStorage jika ada
   useEffect(() => {
     const savedData = sessionStorage.getItem("formData");
     if (savedData) setFormData(JSON.parse(savedData));
   }, []);
 
- const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-  const { name, value } = e.target;
-
-  // Update state secara asinkron dan sinkronkan dengan sessionStorage
-  setFormData((oldFormData) => {
-    const updatedFormData = { ...oldFormData, [name]: value };
-    sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
-    return updatedFormData;
-  });
-};
-
-
-  // Handle perubahan input dan tablist
-  // Handle tab paket
-  const handleTabClick = (value: string, label: string) => {
-    const updatedFormData = { ...formData, paket: { value, label } };
-    setFormData(updatedFormData);
-    sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
-  };
-  
-
-  // Handle tab durasi paket
-  const handleTabDurasiClick = (value: string, label: string) => {
-    const updatedFormData = { ...formData, paketdetail: { value, label } }; 
-    setFormData(updatedFormData);
-    sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
-  };
-
-  // Handle tab paket
-  const handleOptionTabClick = (value: string | number) => {
-    const updatedFormData = { ...formData, tipekamar: String(value) };
-    setFormData(updatedFormData);
-    sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
-  };
 
   // Handle submit form
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    const result = programSchema.safeParse(formData);
+    if (!result.success) {
+      const fieldErrors: { [key: string]: string } = {};
+      result.error.errors.forEach((err) => {
+        fieldErrors[err.path[0]] = err.message;
+      });
+      setErrors(fieldErrors);
+    } else {
+      setErrors({});
+      console.log("Validasi Berhasil:", formData);
+    }
     // Simpan data di sessionStorage
     sessionStorage.setItem("formData", JSON.stringify(formData));
 
@@ -114,21 +73,64 @@ export default function ProgramPage() {
       // Jika validasi berhasil
 
       // Cek cabang untuk navigasi
-        if (formData.cabang === "PARE - JATIM") {
-          router.push("/pages/akomodasi");
-        } else {
-          router.push("/pages/konfirmasi");
-        }
+      if (formData.cabang === "PARE - JATIM") {
+        router.push("/pages/akomodasi");
+      } else {
+        router.push("/pages/konfirmasi");
+      }
     } else {
       // Jika ada field yang belum terisi
-       const missingLabels = missingFields.map((item) => item.label);
-           toast.error(
-             "Mohon lengkapi data berikut: " + missingLabels.join(", ")
-           );
+      const missingLabels = missingFields.map((item) => item.label);
+      toast.error(
+        "Mohon lengkapi data berikut: " + missingLabels.join(", ")
+      );
     }
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
 
+    // Reset error untuk field yang sedang diubah
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+    // Update state secara asinkron dan sinkronkan dengan sessionStorage
+    setFormData((oldFormData) => {
+      const updatedFormData = { ...oldFormData, [name]: value };
+      sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
+      return updatedFormData;
+    });
+  };
+
+  // Handle perubahan input dan tablist
+  // Handle tab paket
+  const handleTabClick = (value: string, label: string) => {
+    // Reset error untuk field yang sedang diubah
+    setErrors((prevErrors) => ({ ...prevErrors, paket: "" }));
+
+    const updatedFormData = { ...formData, paket: { value, label } };
+    setFormData(updatedFormData);
+    sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
+  };
+
+
+  // Handle tab durasi paket
+  const handleTabDurasiClick = (value: string, label: string) => {
+    // Reset error untuk field yang sedang diubah
+    setErrors((prevErrors) => ({ ...prevErrors, paketdetail: "" }));
+
+    const updatedFormData = { ...formData, paketdetail: { value, label } };
+    setFormData(updatedFormData);
+    sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
+  };
+
+  // Handle tab paket
+  const handleOptionTabClick = (value: string | number) => {
+    // Reset error untuk field yang sedang diubah
+    setErrors((prevErrors) => ({ ...prevErrors, tipekamar: "" }));
+
+    const updatedFormData = { ...formData, tipekamar: String(value) };
+    setFormData(updatedFormData);
+    sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
+  };
 
   // Options untuk dropdown
   const cabangOptions = [
@@ -208,8 +210,10 @@ export default function ProgramPage() {
                 options={cabangOptions}
                 value={formData.cabang || ""}
                 onChange={handleChange}
-                required
+                className={` ${errors.cabang ? 'border-red-500' : ''} `}
               />
+
+              {errors.cabang && <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">{errors.cabang}</p>}
             </div>
 
             <div className="w-full lg:w-1/2 flex flex-col space-y-2">
@@ -219,8 +223,10 @@ export default function ProgramPage() {
                 options={periodeOptions}
                 value={formData.periode || ""}
                 onChange={handleChange}
-                required
+                className={` ${errors.periode ? 'border-red-500' : ''} `}
               />
+
+              {errors.periode && <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">{errors.periode}</p>}
             </div>
 
           </div>
@@ -232,14 +238,19 @@ export default function ProgramPage() {
               <ul className="lg:flex lg:flex-row lg:flex-wrap max-w-full gap-4 grid grid-cols-2 ">
                 {paketTabList.map((item) => (
                   <TabList
-                  key={item.value}
-                  label={item.label}
-                  value={item.value}
-                  onClick={() => handleTabClick(item.value, item.label)} // Pass the full item
-                  isActive={formData.paket?.value === item.value}
+                    key={item.value}
+                    label={item.label}
+                    value={item.value}
+                    onClick={() => handleTabClick(item.value, item.label)} // Pass the full item
+                    isActive={formData.paket?.value === item.value}
+                    className={` ${errors.paket ? 'border-red-500' : ''} `}
                   />
                 ))}
               </ul>
+
+              {errors.paket && <p className="text-red-500 text-[10px] pl-2 lg:absolute ">{errors.paket}</p>}
+
+
             </div>
           </div>
 
@@ -257,12 +268,16 @@ export default function ProgramPage() {
                     key={item.value}
                     label={item.label}
                     value={item.value}
-                    onClick={() => handleTabDurasiClick(item.value, item.label)} 
+                    onClick={() => handleTabDurasiClick(item.value, item.label)}
                     isActive={formData.paketdetail?.value === item.value}
+                    className={` ${errors.paketdetail ? 'border-red-500' : ''} `}
                   />
-
                 ))}
               </ul>
+
+              {errors.paketdetail && <p className="text-red-500 text-[10px] pl-2 lg:absolute ">{errors.paketdetail}</p>}
+
+
             </div>
 
 
@@ -290,22 +305,32 @@ export default function ProgramPage() {
                   case "private":
                     return (
                       <div className="w-full flex flex-col space-y-2 lg:flex-row lg:space-x-4 lg:space-y-0">
-                        <Select
-                          name="jampertemuanprivate1"
-                          options={privateOptions[0]}
-                          placeholder="Jam Pertemuan 1"
-                          value={formData.jampertemuanprivate1 || ""}
-                          onChange={handleChange}
-                          required
-                        />
-                        <Select
-                          name="jampertemuanprivate2"
-                          options={privateOptions[1]}
-                          placeholder="Jam Pertemuan 2"
-                          value={formData.jampertemuanprivate2 || ""}
-                          onChange={handleChange}
-                          required
-                        />
+                        <div className="">
+                          <Select
+                            name="jampertemuanprivate1"
+                            options={privateOptions[0]}
+                            placeholder="Jam Pertemuan 1"
+                            value={formData.jampertemuanprivate1 || ""}
+                            onChange={handleChange}
+                            className={` ${errors.jampertemuanprivate1 ? 'border-red-500' : ''} `}
+                          />
+
+                          {errors.jampertemuanprivate1 && <p className="text-red-500 text-[10px] pl-2 lg:absolute">{errors.jampertemuanprivate1}</p>}
+
+                        </div>
+                        <div className="">
+                          <Select
+                            name="jampertemuanprivate2"
+                            options={privateOptions[1]}
+                            placeholder="Jam Pertemuan 2"
+                            value={formData.jampertemuanprivate2 || ""}
+                            onChange={handleChange}
+                            className={` ${errors.jampertemuanprivate2 ? 'border-red-500' : ''} `}
+                          />
+
+                          {errors.jampertemuanprivate2 && <p className="text-red-500 text-[10px] pl-2 lg:absolute">{errors.jampertemuanprivate2}</p>}
+
+                        </div>
                       </div>
                     );
 
@@ -323,6 +348,7 @@ export default function ProgramPage() {
 
                     return (
                       <div className="lg:overflow-y-auto scroll-hidden">
+
                         <ul className="lg:w-max w-full lg:flex lg:flex-row lg:space-x-4 grid grid-cols-2 gap-4 lg:gap-0">
                           {options.map((option) => (
                             <div key={option.value}>
@@ -336,20 +362,20 @@ export default function ProgramPage() {
                                   // Update formData tanpa menggunakan FormData
                                   const updatedFormData = (() => {
                                     const updatedData = { ...formData };
-                                  
+
                                     switch (formData.paket?.value) {
                                       case "intergrated":
                                         updatedData.jampertemuan = option.value; // Update jampertemuan jika paket "intergrated"
                                         break;
-                                  
+
                                       default:
                                         updatedData.tipekamar = option.value; // Update tipeKamar untuk kasus lainnya
                                         break;
                                     }
-                                  
+
                                     return updatedData;
                                   })();
-                                  
+
 
                                   // Simpan data ke state dan sessionStorage
                                   setFormData(updatedFormData);
@@ -371,6 +397,14 @@ export default function ProgramPage() {
                                     }
                                   })()
                                 }
+                                className={(() => {
+                                  switch (formData.paket?.value) {
+                                    case "intergrated":
+                                      return ` ${errors.jampertemuan ? 'border-red-500' : ''} `;
+                                    default:
+                                      return ` ${errors.tipekamar ? 'border-red-500' : ''} `;
+                                  }
+                                })()}
                               />
                             </div>
                           ))}
@@ -380,16 +414,33 @@ export default function ProgramPage() {
                         {(() => {
                           switch (formData.paket?.value) {
                             case "intergrated":
-                              return null; // Tidak ada deskripsi untuk paket intergrated
+                              return (
+                                <>
+                                  {/* Jika paket adalah "intergrated", tampilkan validasi jampertemuan */}
+                                  {errors.jampertemuan && (
+                                    <p className="text-red-500 text-[10px] pl-2 lg:absolute">
+                                      {errors.jampertemuan}
+                                    </p>
+                                  )}
+                                </>
+                              );
                             default:
                               return (
-                                selectedTipe && (
-                                  <div className="lg:absolute lg:w-1/4 w-auto h-auto pt-4">
-                                    <p className="lg:text-left text-center text-xs text-gray-400">
-                                      {tipeKamar.find((item) => item.value === selectedTipe)?.desc || "-"}
+                                <>
+                                  {/* Jika paket bukan "intergrated", tampilkan deskripsi tipe kamar dan validasi tipeKamar */}
+                                  {selectedTipe && (
+                                    <div className="lg:absolute lg:w-1/4 w-auto h-auto pt-4">
+                                      <p className="lg:text-left text-center text-xs text-gray-400">
+                                        {tipeKamar.find((item) => item.value === selectedTipe)?.desc || "-"}
+                                      </p>
+                                    </div>
+                                  )}
+                                  {errors.tipekamar && (
+                                    <p className="text-red-500 text-[10px] pl-2 lg:absolute">
+                                      {errors.tipekamar}
                                     </p>
-                                  </div>
-                                )
+                                  )}
+                                </>
                               );
                           }
                         })()}
@@ -398,13 +449,9 @@ export default function ProgramPage() {
                 }
               })()}
             </div>
-            {/* <div className="flex flex-col justify-center items-center w-full lg:w-1/4">
-              <h2 className="text-center text-black font-semibold text-sm pb-2">Total Harga :</h2>
-              <h2 className="bg-none text-center text-black border-2 border-gray-400 py-2 px-6 rounded-[10px]">Rp 9.000.000</h2>
-            </div> */}
 
             <div className="flex flex-col justify-center items-center w-full lg:pt-0 lg:w-1/4">
-              <h2 className="text-center text-black font-semibold text-sm pb-2">Total Harga :</h2>
+              <h2 className="text-center text-black font-semibold text-sm pb-2">Biaya Program :</h2>
               <h2 className="bg-bill text-center text-white py-2 px-6 rounded-[10px]">Rp 9.000.000</h2>
             </div>
 

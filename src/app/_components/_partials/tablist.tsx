@@ -1,4 +1,4 @@
-import { FC } from "react";
+import React from 'react';
 
 interface TabListProps {
     label: string;
@@ -8,7 +8,13 @@ interface TabListProps {
     className?: string;
 }
 
-const TabList: FC<TabListProps> = ({ label, value, isActive = false, onClick, className = "" }) => {
+export default function TabList({
+    label,
+    value,
+    isActive = false,
+    onClick,
+    className = "",
+}: TabListProps) {
     const handleClick = () => {
         if (onClick) {
             onClick(value);
@@ -45,4 +51,3 @@ const TabList: FC<TabListProps> = ({ label, value, isActive = false, onClick, cl
     );
 };
 
-export default TabList;

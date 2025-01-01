@@ -32,18 +32,20 @@ export default function CustomLayout({
   return (
 
     <div className="flex flex-row w-full h-auto  lg:h-screen bg-img">
-      <ToastContainer
-        position="top-right"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={true}
-        closeOnClick={true}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        transition={Bounce}
-      />
+    <ToastContainer
+  position="top-right"
+  autoClose={2000}
+  hideProgressBar={false}
+  newestOnTop={true}
+  closeOnClick={true}
+  className="w-full lg:max-w-lg "
+  pauseOnFocusLoss
+  draggable
+  pauseOnHover
+  theme="light"
+  transition={Bounce}
+/>
+
       {/* Container */}
       <div className="lg:w-[60%] w-[100%] h-full bg-white shadow-lg lg:rounded-tr-[40px] lg:rounded-br-[40px] items-center justify-center align-middle">
         <div className="mx-10 my-5">
