@@ -22,6 +22,7 @@ export default function Button({
     duration-200
     focus:outline-none
     focus:ring-2
+    shadow-xl
     focus:ring-offset-2
     ${className}
   `;

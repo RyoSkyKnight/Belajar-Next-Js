@@ -11,18 +11,7 @@ import Label from "./_components/_partials/label";
 import TabList from "./_components/_partials/tablist";
 import { validateFormData } from "./_backend/_utils/validationAlert";
 import { dataDiriSchema } from "./_backend/_utils/validationZod";
-
-interface FromData {
-  nama: string;
-  email: string;
-  nomor: string | number;
-  gender: string;
-  umur: string;
-  kesibukan: string;
-  knowlcfrom: string;
-  ketentuan: boolean;
-  [key: string]: string | number | boolean;
-}
+import { defaultFormData } from "./_backend/_utils/formData";
 
 
 export default function Page() {
@@ -31,16 +20,7 @@ export default function Page() {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   // State untuk menyimpan data form
-  const [formData, setFormData] = useState<FromData>({
-    nama: "",
-    email: "",
-    nomor: "",
-    gender: "",
-    umur: "",
-    kesibukan: "",
-    knowlcfrom: "",
-    ketentuan: false,
-  });
+  const [formData, setFormData] = useState(defaultFormData);
 
   // Ambil data dari sessionStorage jika ada
   useEffect(() => {
@@ -140,8 +120,8 @@ export default function Page() {
       mainline="Langkah pertama untuk sukses dimulai di sini! 🚀"
       line="Let's conquer English together! 💪 #KampungInggrisLC #RaihSuksesMuBersamaLC"
     >
-      <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-10 lg:space-y-32 h-min">
-        <div className="flex flex-col space-y-4 min-h-[320px] h-full">
+      <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-10 lg:space-y-32">
+        <div className="flex flex-col space-y-4 h-full">
           {/* Input Nama */}
           <div className="flex flex-col space-y-2">
             <Label htmlFor="nama" required>Nama Lengkap :</Label>
@@ -162,7 +142,7 @@ export default function Page() {
             <div className="flex flex-col space-y-2 w-full md:w-1/2">
               <Label htmlFor="email" required>Email :</Label>
               <Input
-                type="email"
+                type="text"
                 name="email"
                 placeholder="youremail@gmail.com"
                 value={formData.email}

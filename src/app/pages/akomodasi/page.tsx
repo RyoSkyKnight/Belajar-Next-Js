@@ -10,24 +10,16 @@ import Input from "@/app/_components/_partials/input";
 import  TabList  from "@/app/_components/_partials/tablist";
 import { validateFormDataAkomodasi } from "@/app/_backend/_utils/validationAlert";
 import { toast } from "react-toastify";
-
-interface FormData {
-  lokasijemput: string;
-  kendaraan: string;
-  penumpang: string;
-  diskon: string;
-  [key: string]: string;
-}
+import { akomodasiSchema } from "@/app/_backend/_utils/validationZod";
+import { defaultFormData } from "@/app/_backend/_utils/formData";
 
 export default function ProgramPage() {
   const router = useRouter();
 
-  const [formData, setFormData] = useState<FormData>({
-    lokasijemput: "ga_perlu_dijemput",
-    kendaraan: "",
-    penumpang: "",
-    diskon: "",
-  }); // Default kosong 
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+   // State untuk menyimpan data form
+   const [formData, setFormData] = useState(defaultFormData);
 
   // Ambil data dari sessionStorage jika ada
   useEffect(() => {
@@ -35,8 +27,41 @@ export default function ProgramPage() {
     if (savedData) setFormData(JSON.parse(savedData));
   }, []);
 
+   // Handle submit form
+   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+       const result = akomodasiSchema.safeParse(formData);
+        if (!result.success) {
+          const fieldErrors: { [key: string]: string } = {};
+          result.error.errors.forEach((err) => {
+            fieldErrors[err.path[0]] = err.message;
+          });
+          setErrors(fieldErrors);
+        } else {
+          setErrors({});
+          console.log("Validasi Berhasil:", formData);
+        }
+
+    // Simpan data di sessionStorage
+    sessionStorage.setItem("formData", JSON.stringify(formData));
+
+     const { isValid, missingFields } = validateFormDataAkomodasi(formData);
+    
+        if (isValid) {
+         router.push("/pages/konfirmasi")
+        } else {  
+          const missingLabels = missingFields.map((item) => item.label);
+              toast.error(
+                "Mohon lengkapi data berikut: " + missingLabels.join(", ")
+              );
+       }
+     };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
   
     // Update state secara asinkron dan sinkronkan dengan sessionStorage
     setFormData((oldFormData) => {
@@ -49,30 +74,14 @@ export default function ProgramPage() {
 
 
   const handleTabClick = (value: string | number) => {
+    setErrors((prevErrors) => ({ ...prevErrors, kendaraan : "" }));
     const updatedFormData = { ...formData, kendaraan : String(value) };
     setFormData(updatedFormData);
     sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
   };
 
 
-  // Handle submit form
-   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-  
-      // Simpan data di sessionStorage
-      sessionStorage.setItem("formData", JSON.stringify(formData));
-  
-       const { isValid, missingFields } = validateFormDataAkomodasi(formData);
-      
-          if (isValid) {
-           router.push("/pages/konfirmasi")
-          } else {  
-            const missingLabels = missingFields.map((item) => item.label);
-                toast.error(
-                  "Mohon lengkapi data berikut: " + missingLabels.join(", ")
-                );
-         }
-       };
+ 
 
   // Options untuk dropdown
   const lokasiJemputOptions = [
@@ -106,7 +115,7 @@ export default function ProgramPage() {
           <Select
             name="lokasijemput"
             options={lokasiJemputOptions}
-            value={formData.lokasijemput || "ga_perlu_dijemput"}
+            value={formData.lokasijemput}
             onChange={handleChange}
           
           />
@@ -123,16 +132,20 @@ export default function ProgramPage() {
 
                   {kendaraanOptions.map((item) => (
                     <TabList 
-                      className="w-full"
                       key={item.value}
                       label={item.label}
                       value={item.value}
                       onClick={handleTabClick}
                       isActive={formData.kendaraan === item.value}
-                    />
-                  ))}
-                </ul>
-              </div>
+                      className={ `w-full ${errors.kendaraan ? 'border-red-500' : ''} `}
+                      />
+                    ))}
+                  </ul>
+    
+                  {errors.kendaraan && <p className="text-red-500 text-[10px] pl-2 lg:absolute ">{errors.kendaraan}</p>}
+    
+    
+                </div>
           </div>
 
           <div className="w-full md:w-1/2 flex flex-col space-y-2">
@@ -142,9 +155,12 @@ export default function ProgramPage() {
               options={penumpangOptions}
               value={formData.penumpang || ""}
               onChange={handleChange}
-            
-            />
-          </div>
+              className={` ${errors.penumpang ? 'border-red-500' : ''} `}
+              />
+
+              {errors.penumpang && <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">{errors.penumpang}</p>}
+
+            </div>
         </div>
       </div>
 
@@ -160,8 +176,8 @@ export default function ProgramPage() {
             />
           </div>
           
-          <div className={formData.lokasijemput === "ga_perlu_dijemput" ? "hidden" : "block"}>
-               <div className="flex flex-col justify-center items-center w-full lg:pt-0 lg:w-1/4">
+          <div className={`w-full lg:pt-0 lg:w-1/4 ${formData.lokasijemput === "ga_perlu_dijemput" ? "hidden" : "block"}`}>
+               <div className="flex flex-col justify-center items-center ">
                 <h2 className="text-center text-black font-semibold text-sm pb-2">Biaya Akomodasi :</h2>
                 <h2 className="bg-bill text-center text-white py-2 px-6 rounded-[10px]">Rp 900.000</h2>
               </div>

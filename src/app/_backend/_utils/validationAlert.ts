@@ -1,4 +1,6 @@
-export const validateFormData = (formData: { [key: string]: string | number | boolean }) => {
+import { FormData } from "./Interfaces";
+
+export const validateFormData = (formData: FormData ) => {
   const requiredFields = [
     { field: "nama", label: "Nama Lengkap" },
     { field: "email", label: "Email" },
@@ -8,9 +10,40 @@ export const validateFormData = (formData: { [key: string]: string | number | bo
     { field: "knowlcfrom", label: "Tahu LC Dari" },
     { field: "umur", label: "Umur" },
   ];
+
   const missingFields = requiredFields.filter(
     (item) => !formData[item.field as keyof typeof formData]
   );
+
+  // Validate nama field
+  const namaValue = String(formData.nama || '');
+  const isNameValid = /^[a-zA-Z\s.,]+$/.test(namaValue);
+  const isNameStartsWithSpace = namaValue.startsWith(' ');
+
+  if (!isNameValid && namaValue) {
+    return {
+      isValid: false,
+      missingFields: [{ field: "nama", label: "Nama Lengkap hanya boleh mengandung huruf, titik, dan koma" }],
+    };
+  }
+
+  if (isNameStartsWithSpace) {
+    return {
+      isValid: false,
+      missingFields: [{ field: "nama", label: "Nama Lengkap tidak boleh diawali dengan spasi" }],
+    };
+  }
+
+  // Validate email field
+  const emailValue = String(formData.email || '');
+  const isEmailStartsWithSpace = emailValue.startsWith(' ');
+
+  if (isEmailStartsWithSpace) {
+    return {
+      isValid: false,
+      missingFields: [{ field: "email", label: "Email tidak boleh diawali dengan spasi" }],
+    };
+  }
 
   return {
     isValid: missingFields.length === 0,
@@ -18,7 +51,7 @@ export const validateFormData = (formData: { [key: string]: string | number | bo
   };
 };
 
-export const validateFormDataProgram = (formData: { [key: string]: string | number | boolean | { value: string; label: string } }) => {
+export const validateFormDataProgram = ( formData: FormData) => {
 
   const savedData = JSON.parse(sessionStorage.getItem("formData") || "{}");
 
@@ -62,7 +95,7 @@ export const validateFormDataProgram = (formData: { [key: string]: string | numb
 
 };
 
-export const validateFormDataAkomodasi = (formData: { [key: string]: string | number | boolean }) => {
+export const validateFormDataAkomodasi = (formData: FormData) => {
 
   const requiredFields = [
     { field: "lokasijemput", label: "Penjemputan" },
@@ -70,12 +103,12 @@ export const validateFormDataAkomodasi = (formData: { [key: string]: string | nu
 
   switch (formData.lokasijemput) {
     case "ga_perlu_dijemput":
+      break;
+    default:
       requiredFields.push(
         { field: "kendaraan", label: "Kendaraan" },
         { field: "penumpang", label: "Banyak Penumpang" },
       );
-      break;
-    default:
       break;
   };
   const missingFields = requiredFields.filter(
@@ -89,10 +122,10 @@ export const validateFormDataAkomodasi = (formData: { [key: string]: string | nu
 };
 
 
-export const validateFormDataKonfirmasi = (formData: { [key: string]: string | number | { label: string } }) => {
+export const validateFormDataKonfirmasi = (formData: FormData) => {
 
   const requiredFields = [
-    { field: "paymentmethod", label: "Pembayaran" },
+    { field: "pembayaran", label: "Metode Pembayaran" },
   ];
   const missingFields = requiredFields.filter(
     (item) => !formData[item.field as keyof typeof formData]

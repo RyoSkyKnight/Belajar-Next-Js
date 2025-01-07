@@ -10,32 +10,16 @@ import { toast } from "react-toastify";
 import { validateFormDataKonfirmasi } from "@/app/_backend/_utils/validationAlert";
 import Label from "@/app/_components/_partials/label";
 import PaymentOption from "@/app/_components/_partials/paymentOption";
+import { konfirmasiSchema } from "@/app/_backend/_utils/validationZod";
+import { defaultFormData } from "@/app/_backend/_utils/formData";
 
-interface FormData {
-  [key: string]: string | number | { label: string };
-  paymentmethod: string;
-  paket: { label: string };
-  paketdetail: { label: string };
-  nama: string | number;
-  email: string;
-  nomor: string | number;
-  gender: string;
-  kesibukan: string;
-}
+
 export default function KonfirmasiPage() {
   const router = useRouter();
-  const [formData, setFormData] = useState<FormData>({
-    paymentmethod: "",
-    paket: { label: "" },
-    paketdetail: { label: "" },
-    nama: "",
-    email: "",
-    nomor: "",
-    gender: "",
-    kesibukan: ""
-  });
+  const [formData, setFormData] = useState(defaultFormData)
   const [accepted, setAccepted] = useState(false);
   const [akomodasi, setAkomodasi] = useState(false);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
 
 
@@ -47,7 +31,7 @@ export default function KonfirmasiPage() {
 
       const isAkomodasi = Boolean(
         parsedData.cabang === "PARE - JATIM" &&
-        parsedData.penjemputan &&
+        parsedData.lokasijemput &&
         parsedData.kendaraan &&
         parsedData.penumpang
       );
@@ -56,27 +40,21 @@ export default function KonfirmasiPage() {
     }
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-
-    // Update state secara asinkron dan sinkronkan dengan sessionStorage
-    setFormData((oldFormData) => {
-      const updatedFormData = { ...oldFormData, [name]: value };
-      sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
-      return updatedFormData;
-    });
-  };
-
-  const handlePayment = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const updatedFormData = { ...formData, paymentmethod: e.target.value };
-    setFormData(updatedFormData);
-    sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
-  };
-
-
   // Handle submit form
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+     const result = konfirmasiSchema.safeParse(formData);
+            if (!result.success) {
+              const fieldErrors: { [key: string]: string } = {};
+              result.error.errors.forEach((err) => {
+                fieldErrors[err.path[0]] = err.message;
+              });
+              setErrors(fieldErrors);
+            } else {
+              setErrors({});
+              console.log("Validasi Berhasil:", formData);
+            }
 
     // Simpan data di sessionStorage
     sessionStorage.setItem("formData", JSON.stringify(formData));
@@ -99,40 +77,58 @@ export default function KonfirmasiPage() {
     return String(val).charAt(0).toUpperCase() + String(val).slice(1);
   }
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
 
-  const paymentMethod = [
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+
+    // Update state secara asinkron dan sinkronkan dengan sessionStorage
+    setFormData((oldFormData) => {
+      const updatedFormData = { ...oldFormData, [name]: value };
+      sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
+      return updatedFormData;
+    });
+  };
+
+  const handlePayment = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const updatedFormData = { ...formData, pembayaran: e.target.value };
+    setFormData(updatedFormData);
+    sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
+  };
+
+  const pembayaran = [
     {
       id: "bsm",
       value: "Bank Syariah Indonesia",
-      checked: formData.paymentmethod === "Bank Syariah Indonesia",
+      checked: formData.pembayaran === "Bank Syariah Indonesia",
       icon: "https://idn-static-assets.s3-ap-southeast-1.amazonaws.com/website/img/merchant_logos/idn_bsi.png",
       label: "Bank Syariah Indonesia",
     },
     {
       id: "prismalink_bca",
       value: "Bank BCA",
-      checked: formData.paymentmethod === "Bank BCA",
+      checked: formData.pembayaran === "Bank BCA",
       icon: "https://idn-static-assets.s3-ap-southeast-1.amazonaws.com/emailblast/assets/merchant/img_logo_merchant_bca.png",
       label: "Bank BCA",
     },
     {
       id: "jatelindo",
       value: "Bank Mandiri",
-      checked: formData.paymentmethod === "Bank Mandiri",
+      checked: formData.pembayaran === "Bank Mandiri",
       icon: "https://idn-static-assets.s3-ap-southeast-1.amazonaws.com/emailblast/assets/merchant/img_logo_merchant_mandiri.png",
       label: "Bank Mandiri",
     },
     {
       id: "bni",
       value: "BNI",
-      checked: formData.paymentmethod === "BNI",
+      checked: formData.pembayaran === "BNI",
       icon: "https://idn-static-assets.s3-ap-southeast-1.amazonaws.com/emailblast/assets/merchant/img_logo_merchant_bni.png",
       label: "BNI",
     },
     {
       id: "bri",
       value: "BRI",
-      checked: formData.paymentmethod === "BRI",
+      checked: formData.pembayaran === "BRI",
       icon: "https://idn-static-assets.s3-ap-southeast-1.amazonaws.com/emailblast/assets/merchant/img_logo_merchant_bri.png",
       label: "BRI",
     },
@@ -216,24 +212,25 @@ export default function KonfirmasiPage() {
           </div>
 
           <div className="w-full flex-col space-y-2 lg:block hidden">
-            <Label htmlFor="paymentMethod" className="font-bold" required>Metode Pembayaran :</Label>
+            <Label htmlFor="pembayaran" className="font-bold" required>Metode Pembayaran :</Label>
             <Select
-              className=""
-              name="paymentmethod"
-              options={paymentMethod}
+              name="pembayaran"
+              options={pembayaran}
               placeholder="Pilih Metode Pembayaran"
-              value={formData.paymentmethod}
+              value={formData.pembayaran}
               onChange={handleChange}
-              required
+              className={` ${errors.pembayaran ? 'border-red-500' : ''} `}
+              />
 
-            />
-          </div>
+              {errors.pembayaran && <p className="text-red-500 text-[10px] pl-2 lg:absolute ">{errors.pembayaran}</p>}
+
+            </div>
 
           <div className="flex flex-col space-y-3 lg:hidden">
-          <Label htmlFor="paymentMethod" className="font-bold" required>Metode Pembayaran :</Label>    
+          <Label htmlFor="pembayaran" className="font-bold" required>Metode Pembayaran :</Label>    
           <div className="flex flex-col space-y-4 lg:hidden">
             {
-              paymentMethod.map((item) => (
+              pembayaran.map((item) => (
                 <PaymentOption
                   key={item.id}
                   id={item.id}
@@ -242,8 +239,10 @@ export default function KonfirmasiPage() {
                   icon={item.icon}
                   label={item.label}
                   onChange={handlePayment}
+                  className={` ${errors.pembayaran ? 'border-red-500' : ''} `}
                 />
               ))
+
             }
           </div>
           </div>

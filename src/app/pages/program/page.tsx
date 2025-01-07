@@ -10,18 +10,7 @@ import TabList from "@/app/_components/_partials/tablist";
 import { validateFormDataProgram } from "@/app/_backend/_utils/validationAlert";
 import { toast } from "react-toastify";
 import { programSchema } from "@/app/_backend/_utils/validationZod";
-
-interface FormData {
-  cabang: string;
-  periode: string;
-  paket: { value: string; label: string };
-  paketdetail: { value: string; label: string };
-  jampertemuanprivate1: string;
-  jampertemuanprivate2: string;
-  jampertemuan: string;
-  tipekamar: string;
-  [key: string]: string | number | boolean | { value: string; label: string };
-}
+import { defaultFormData } from "@/app/_backend/_utils/formData";
 
 export default function ProgramPage() {
   const router = useRouter();
@@ -29,18 +18,8 @@ export default function ProgramPage() {
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-
-  const [formData, setFormData] = useState<FormData>({
-    cabang: '',
-    periode: '',
-    paket: { value: '', label: '' },
-    paketdetail: { value: '', label: '' },
-    jampertemuanprivate1: '',
-    jampertemuanprivate2: '',
-    jampertemuan: '',
-    tipekamar: ''
-  }); // Default kosong
-
+  // State untuk menyimpan data form
+  const [formData, setFormData] = useState(defaultFormData);
 
   // Ambil data dari sessionStorage jika ada
   useEffect(() => {
@@ -126,8 +105,9 @@ export default function ProgramPage() {
   const handleOptionTabClick = (value: string | number) => {
     // Reset error untuk field yang sedang diubah
     setErrors((prevErrors) => ({ ...prevErrors, tipekamar: "" }));
+    setErrors((prevErrors) => ({ ...prevErrors, jampertemuan: "" }));
 
-    const updatedFormData = { ...formData, tipekamar: String(value) };
+    const updatedFormData = { ...formData, tipekamar: String(value) , jampertemuan: String(value) };
     setFormData(updatedFormData);
     sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
   };
@@ -208,7 +188,7 @@ export default function ProgramPage() {
               <Select
                 name="cabang"
                 options={cabangOptions}
-                value={formData.cabang || ""}
+                value={formData.cabang}
                 onChange={handleChange}
                 className={` ${errors.cabang ? 'border-red-500' : ''} `}
               />
@@ -221,7 +201,7 @@ export default function ProgramPage() {
               <Select
                 name="periode"
                 options={periodeOptions}
-                value={formData.periode || ""}
+                value={formData.periode}
                 onChange={handleChange}
                 className={` ${errors.periode ? 'border-red-500' : ''} `}
               />
@@ -310,7 +290,7 @@ export default function ProgramPage() {
                             name="jampertemuanprivate1"
                             options={privateOptions[0]}
                             placeholder="Jam Pertemuan 1"
-                            value={formData.jampertemuanprivate1 || ""}
+                            value={formData.jampertemuanprivate1}
                             onChange={handleChange}
                             className={` ${errors.jampertemuanprivate1 ? 'border-red-500' : ''} `}
                           />
@@ -323,7 +303,7 @@ export default function ProgramPage() {
                             name="jampertemuanprivate2"
                             options={privateOptions[1]}
                             placeholder="Jam Pertemuan 2"
-                            value={formData.jampertemuanprivate2 || ""}
+                            value={formData.jampertemuanprivate2}
                             onChange={handleChange}
                             className={` ${errors.jampertemuanprivate2 ? 'border-red-500' : ''} `}
                           />
