@@ -7,8 +7,6 @@ export const validateFormData = (formData: FormData ) => {
     { field: "nomor", label: "Nomor WhatsApp" },
     { field: "gender", label: "Jenis Kelamin" },
     { field: "kesibukan", label: "Kesibukan" },
-    { field: "knowlcfrom", label: "Tahu LC Dari" },
-    { field: "umur", label: "Umur" },
   ];
 
   const missingFields = requiredFields.filter(
@@ -19,6 +17,21 @@ export const validateFormData = (formData: FormData ) => {
   const namaValue = String(formData.nama || '');
   const isNameValid = /^[a-zA-Z\s.,]+$/.test(namaValue);
   const isNameStartsWithSpace = namaValue.startsWith(' ');
+  const nomorValue = String(formData.nomor);
+
+  if (nomorValue.length < 10) {
+    return {
+      isValid: false,
+      missingFields: [{ field: "nomor", label: "Nomor WhatsApp minimal 10 digit" }],
+    };
+  }
+
+  if (nomorValue.length > 15) {
+    return {
+      isValid: false,
+      missingFields: [{ field: "nomor", label: "Nomor WhatsApp tidak valid" }],
+    };
+  }
 
   if (!isNameValid && namaValue) {
     return {

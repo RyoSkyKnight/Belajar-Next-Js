@@ -6,7 +6,6 @@ import Button from "@/app/_components/_partials/button";
 import Label from "@/app/_components/_partials/label";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Input from "@/app/_components/_partials/input";
 import  TabList  from "@/app/_components/_partials/tablist";
 import { validateFormDataAkomodasi } from "@/app/_backend/_utils/validationAlert";
 import { toast } from "react-toastify";
@@ -107,7 +106,7 @@ export default function ProgramPage() {
       mainline="Wah, dikit lagi nih! Langkah demi langkah menuju kesuksesan dimulai! 🚀"
       line="Ayo, kita taklukkan bahasa Inggris bareng-bareng! 💪 #DrivesYourSuccess #BoostYourEnglishWithLC"
     >
-       <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-10 lg:space-y-32">
+       <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-10 lg:space-y-[6.85rem]">
        <div className="flex flex-col space-y-4 min-h-[320px] h-full">
 
         <div className="flex flex-col space-y-2">
@@ -121,7 +120,7 @@ export default function ProgramPage() {
           />
         </div>
 
-       <div className={formData.lokasijemput === "ga_perlu_dijemput" ? "hidden" : "block"}>
+       <div className={formData.lokasijemput === "ga_perlu_dijemput" || formData.lokasijemput === "" ? "hidden" : "block" }>
         <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
 
           <div className="w-full md:w-1/2 flex flex-col space-y-2">
@@ -164,19 +163,9 @@ export default function ProgramPage() {
         </div>
       </div>
 
-        <div className="flex flex-col lg:flex-row justify-between w-full space-y-4 lg:space-y-0">
-          <div className="flex flex-col space-y-2 w-full md:w-1/3">
-            <Label htmlFor="diskon">Kode Voucher :</Label>
-            <Input
-              type="text"
-              name="diskon"
-              placeholder="Ketikan disini (jika ada)"
-              value={formData.diskon || ""}
-              onChange={handleChange}
-            />
-          </div>
-          
-          <div className={`w-full lg:pt-0 lg:w-1/4 ${formData.lokasijemput === "ga_perlu_dijemput" ? "hidden" : "block"}`}>
+        <div className="flex flex-col lg:flex-row justify-center w-full space-y-4 lg:space-y-0">
+  
+          <div className={`w-full lg:pt-5 lg:w-1/4 ${formData.lokasijemput === "ga_perlu_dijemput" ? "hidden" : "block"}`}>
                <div className="flex flex-col justify-center items-center ">
                 <h2 className="text-center text-black font-semibold text-sm pb-2">Biaya Akomodasi :</h2>
                 <h2 className="bg-bill text-center text-white py-2 px-6 rounded-[10px]">Rp 900.000</h2>

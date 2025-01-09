@@ -3,10 +3,7 @@ export interface FormData {
     email: string;
     nomor: string | number;
     gender: string;
-    umur: string;
     kesibukan: string;
-    knowlcfrom: string;
-    ketentuan: boolean;
     paket: { value: string; label: string };
     paketdetail: { value: string; label: string };
     jampertemuanprivate1: string;
@@ -22,29 +19,4 @@ export interface FormData {
     pembayaran: string;
     [key: string]: string | number | boolean | { value: string; label: string };
   }
-  
-
-export const defaultFormData: FormData = {
-    nama: "",
-    email: "",
-    nomor: "",
-    gender: "",
-    umur: "",
-    kesibukan: "",
-    knowlcfrom: "",
-    ketentuan: false,
-    cabang: "",
-    periode: "",
-    paket: { value: "", label: "" },
-    paketdetail: { value: "", label: "" },
-    jampertemuanprivate1: "",
-    jampertemuanprivate2: "",
-    jampertemuan: "",
-    tipekamar: "",
-    lokasijemput: "",
-    kendaraan: "",
-    penumpang: "",
-    diskon: "",
-    pembayaran: "",
-  };
   

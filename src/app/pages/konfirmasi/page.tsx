@@ -5,13 +5,15 @@ import { useEffect, useState } from "react";
 import Button from "@/app/_components/_partials/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Select from "@/app/_components/_partials/select";
+// import Select from "@/app/_components/_partials/select";
 import { toast } from "react-toastify";
 import { validateFormDataKonfirmasi } from "@/app/_backend/_utils/validationAlert";
 import Label from "@/app/_components/_partials/label";
+import Input from "@/app/_components/_partials/input";
 import PaymentOption from "@/app/_components/_partials/paymentOption";
 import { konfirmasiSchema } from "@/app/_backend/_utils/validationZod";
 import { defaultFormData } from "@/app/_backend/_utils/formData";
+import BottomSheet from "@/app/_components/_partials/sheet";
 
 
 export default function KonfirmasiPage() {
@@ -20,6 +22,7 @@ export default function KonfirmasiPage() {
   const [accepted, setAccepted] = useState(false);
   const [akomodasi, setAkomodasi] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [isOpen, setIsOpen] = useState(false);
 
 
 
@@ -31,7 +34,7 @@ export default function KonfirmasiPage() {
 
       const isAkomodasi = Boolean(
         parsedData.cabang === "PARE - JATIM" &&
-        parsedData.lokasijemput &&
+        parsedData.lokasijemput !== "ga_perlu_dijemput" &&
         parsedData.kendaraan &&
         parsedData.penumpang
       );
@@ -44,17 +47,17 @@ export default function KonfirmasiPage() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-     const result = konfirmasiSchema.safeParse(formData);
-            if (!result.success) {
-              const fieldErrors: { [key: string]: string } = {};
-              result.error.errors.forEach((err) => {
-                fieldErrors[err.path[0]] = err.message;
-              });
-              setErrors(fieldErrors);
-            } else {
-              setErrors({});
-              console.log("Validasi Berhasil:", formData);
-            }
+    const result = konfirmasiSchema.safeParse(formData);
+    if (!result.success) {
+      const fieldErrors: { [key: string]: string } = {};
+      result.error.errors.forEach((err) => {
+        fieldErrors[err.path[0]] = err.message;
+      });
+      setErrors(fieldErrors);
+    } else {
+      setErrors({});
+      console.log("Validasi Berhasil:", formData);
+    }
 
     // Simpan data di sessionStorage
     sessionStorage.setItem("formData", JSON.stringify(formData));
@@ -71,6 +74,7 @@ export default function KonfirmasiPage() {
       );
     }
   };
+
 
   function capitalizeFirstLetter(val: string | number | undefined) {
     if (val === null || val === undefined) return val; // Return the value as is if it's null or undefined
@@ -133,7 +137,7 @@ export default function KonfirmasiPage() {
       label: "BRI",
     },
   ];
-  
+
 
 
   return (
@@ -142,8 +146,8 @@ export default function KonfirmasiPage() {
       line="Konfirmasi dulu biar gak ada kekeliruan nanti {'<3'} ! 😍 #InggrisItuSeru #BelajarSeruDiLC"
     >
 
-      <form onSubmit={handleSubmit}  >
-        <div className={`mx-auto flex flex-col space-y-10 ${formData.cabang === "PARE - JATIM" ? "lg:space-y-3" : "lg:space-y-6"}`}>
+      <form onSubmit={handleSubmit} className={`w-full flex flex-col space-y-10 ${akomodasi ? 'lg:space-y-3' : 'lg:space-y-6'}`} >
+        <div className={`mx-auto lg:h-[53vh] w-full overflow-x-auto scroll-hidden flex flex-col space-y-6`}>
           {/* Main Content */}
 
           <div className="w-full mx-auto rounded-3xl lg:border lg:border-gray-400 bg-white p-2 lg:py-3 lg:px-6 h-auto">
@@ -190,7 +194,7 @@ export default function KonfirmasiPage() {
                   <span>Rp. 9.000.000</span>
                 </div>
                 {
-                 akomodasi ? (
+                  akomodasi ? (
                     <div className="flex justify-between text-gray-600">
                       <span>Biaya Tambahan</span>
                       <span>Rp. 900.000</span>
@@ -204,85 +208,135 @@ export default function KonfirmasiPage() {
                 <div className="my-2 border-b border-gray-300"></div>
                 <div className="flex justify-between text-black text-[15px] font-bold">
                   <span>Total Pembayaran</span>
-                  <span>Rp. 9.960.000</span>
+                  <span className="px-2 py-1">Rp. 9.960.000</span>
                 </div>
               </div>
             </div>
 
           </div>
 
-          <div className="w-full flex-col space-y-2 lg:block hidden">
+          <div className="flex flex-col lg:flex-row justify-between w-full space-y-4 lg:space-y-0">
+            <div className="flex flex-col space-y-2 w-full lg:w-1/2">
+              <Label htmlFor="diskon" className="font-bold">Kode Voucher :</Label>
+              <Input
+                type="text"
+                name="diskon"
+                placeholder="Ketikan disini (jika ada)"
+                value={formData.diskon || ""}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className={`w-full lg:pt-0 lg:w-1/4 `}>
+              <div className="flex flex-col justify-center items-center ">
+                <h2 className="text-center text-black font-semibold text-sm pb-2">Total Biaya :</h2>
+                <h2 className="bg-bill text-center text-white py-2 px-6 rounded-[10px]">Rp 9.960.000</h2>
+              </div>
+            </div>
+          </div>
+
+
+          <div className="flex flex-col space-y-3 ">
             <Label htmlFor="pembayaran" className="font-bold" required>Metode Pembayaran :</Label>
-            <Select
-              name="pembayaran"
-              options={pembayaran}
-              placeholder="Pilih Metode Pembayaran"
-              value={formData.pembayaran}
-              onChange={handleChange}
-              className={` ${errors.pembayaran ? 'border-red-500' : ''} `}
-              />
 
-              {errors.pembayaran && <p className="text-red-500 text-[10px] pl-2 lg:absolute ">{errors.pembayaran}</p>}
-
+            <div
+              onClick={() => setIsOpen(true)}
+              className="cursor-pointer border border-gray-400 w-full p-2 rounded-[10px] text-black"
+            >
+              {formData.pembayaran || "Pilih Pembayaran"}
             </div>
 
-          <div className="flex flex-col space-y-3 lg:hidden">
-          <Label htmlFor="pembayaran" className="font-bold" required>Metode Pembayaran :</Label>    
-          <div className="flex flex-col space-y-4 lg:hidden">
-            {
-              pembayaran.map((item) => (
-                <PaymentOption
-                  key={item.id}
-                  id={item.id}
-                  value={item.value}
-                  checked={item.checked}
-                  icon={item.icon}
-                  label={item.label}
-                  onChange={handlePayment}
-                  className={` ${errors.pembayaran ? 'border-red-500' : ''} `}
-                />
-              ))
+            <BottomSheet
 
-            }
+              isOpen={isOpen}
+              onClose={() => setIsOpen(false)}
+              title="Pilih Metode Pembayaran"
+              initialHeight="80%" // Custom height
+            >
+              <div className="flex flex-col h-full">
+                <div className="flex-1 overflow-y-auto space-y-4">
+                  {/* Payment Options */}
+                  {pembayaran.map((item) => (
+                    <PaymentOption
+                      key={item.id}
+                      id={item.id}
+                      value={item.value}
+                      checked={item.checked}
+                      icon={item.icon}
+                      label={item.label}
+                      onChange={handlePayment}
+                      className={`${errors.pembayaran ? "border-red-500" : ""}`}
+                    />
+                  ))}
+
+                  <PaymentOption
+                    key="other"
+                    id="other"
+                    value="Pembayaran Lain"
+                    checked={formData.pembayaran === "Pembayaran Lain"}
+                    icon="https://www.pngplay.com/wp-content/uploads/7/Debit-Card-Icon-PNG-Clipart-Background.png"
+                    label="Metode Pembayaran Lain"
+                    onChange={handlePayment}
+                    className={`${errors.pembayaran ? "border-red-500" : ""}`}
+                  />
+                </div>
+
+                {/* Fixed Button at the Bottom */}
+                <div className="sticky bottom-0 bg-white border-t border-gray-200">
+                  <button
+                    type="button"
+                    className="w-full bg-blue-500 text-white py-2 rounded-lg"
+                    onClick={() => {
+                      setIsOpen(false);
+                      const syntheticEvent = {
+                        target: Object.assign(document.createElement("input"), {
+                          value: formData.pembayaran,
+                        }),
+                      } as React.ChangeEvent<HTMLInputElement>;
+                      handlePayment(syntheticEvent);
+                    }}
+                  >
+                    Pilih
+                  </button>
+                </div>
+              </div>
+
+            </BottomSheet>
+
+
           </div>
+        </div>
+        {/* Privacy Policy */}
+        <div className="">
+          <div className="flex items-center justify-center space-x-2 pb-4">
+            <input
+              type="checkbox"
+              id="privacy"
+              checked={accepted}
+              onChange={(e) => setAccepted(e.target.checked)}
+            />
+            <label htmlFor="privacy" className="text-sm text-gray-500">
+              Dengan melanjutkan, saya menyetujui{" "}
+              <Link href="#" className="text-blue-600 hover:underline">
+                Kebijakan Privasi dan Syarat & Ketentuan
+              </Link>{" "}
+              yang berlaku
+            </label>
           </div>
 
+          {/* Submit Button */}
+          <div className="flex flex-row w-full gap-4">
+            <Button type="button" className="w-full bg-white border-2 border-main-color" onClick={() => formData.cabang !== "PARE - JATIM" ? router.push("/pages/program") : router.push("/pages/akomodasi")}>Kembali</Button>
 
+            <Button
+              disabled={!accepted}
+              type="submit"
+              className="w-full transition-all duration-200 bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+            >
+              Konfirmasi
+            </Button>
 
-
-          {/* Privacy Policy */}
-          <div className="">
-            <div className="flex items-center justify-center space-x-2 pb-4">
-              <input
-                type="checkbox"
-                id="privacy"
-                checked={accepted}
-                onChange={(e) => setAccepted(e.target.checked)}
-              />
-              <label htmlFor="privacy" className="text-sm text-gray-500">
-                Dengan melanjutkan, saya menyetujui{" "}
-                <Link href="#" className="text-blue-600 hover:underline">
-                  Kebijakan Privasi dan Syarat & Ketentuan
-                </Link>{" "}
-                yang berlaku
-              </label>
-            </div>
-
-            {/* Submit Button */}
-            <div className="flex flex-row w-full gap-4">
-              <Button type="button" className="w-full bg-white border-2 border-main-color" onClick={() => formData.cabang !== "PARE - JATIM" ? router.push("/pages/program") : router.push("/pages/akomodasi")}>Kembali</Button>
-
-              <Button
-                disabled={!accepted}
-                type="submit"
-                className="w-full transition-all duration-200 bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
-              >
-                Konfirmasi
-              </Button>
-
-            </div>
           </div>
-
         </div>
       </form>
 

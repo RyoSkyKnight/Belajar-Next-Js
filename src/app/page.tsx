@@ -77,7 +77,7 @@ export default function Page() {
 
 
   const handleTabClick = (value: string | number) => {
-    setErrors((prevErrors) => ({ ...prevErrors, gender : "" }));
+    setErrors((prevErrors) => ({ ...prevErrors, gender: "" }));
 
     const updatedFormData = { ...formData, gender: String(value) };
     setFormData(updatedFormData);
@@ -91,36 +91,19 @@ export default function Page() {
     { value: "perempuan", label: "Perempuan" },
   ];
 
-  const umurOptions = [
-    { value: "17-20", label: "17-20 Tahun" },
-    { value: "21-25", label: "21-25 Tahun" },
-    { value: "26-30", label: "26-30 Tahun" },
-    { value: "31-35", label: "31-35 Tahun" },
-    { value: "36-40", label: "36-40 Tahun" },
-    { value: "41-45", label: "41-45 Tahun" },
-    { value: "46-50", label: "46-50 Tahun" },
-    { value: "51-55", label: "51-55 Tahun" },
-    { value: "56-60", label: "56-60 Tahun" },
-  ];
   const kesibukanOptions = [
     { value: "pelajar", label: "Pelajar" },
     { value: "mahasiswa", label: "Mahasiswa" },
     { value: "pekerja", label: "Pekerja" },
   ];
 
-  const knowLCFromOptions = [
-    { value: "google", label: "Google" },
-    { value: "facebook", label: "Facebook" },
-    { value: "instagram", label: "Instagram" },
-    { value: "lainnya", label: "Lainnya" },
-  ];
 
   return (
     <CustomLayout
       mainline="Langkah pertama untuk sukses dimulai di sini! 🚀"
       line="Let's conquer English together! 💪 #KampungInggrisLC #RaihSuksesMuBersamaLC"
     >
-      <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-10 lg:space-y-32">
+      <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-10 lg:space-y-44">
         <div className="flex flex-col space-y-4 h-full">
           {/* Input Nama */}
           <div className="flex flex-col space-y-2">
@@ -163,7 +146,7 @@ export default function Page() {
                 value={formData.nomor}
                 onChange={(e) => {
                   const value = e.target.value;
-                  if (/^\d*$/.test(value)) { // Hanya mengizinkan angka
+                  if (/^\d*$/.test(value) && value.length <= 15) { // Hanya angka, maksimal 15 karakter
                     handleChange(e); // Lanjutkan hanya jika input valid
                   }
                 }}
@@ -193,7 +176,7 @@ export default function Page() {
                     value={item.value}
                     onClick={handleTabClick}
                     isActive={formData.gender === item.value}
-                    className={` ${errors.gender ? 'border-red-500' : ''} `}
+                    className={`w-full ${errors.gender ? 'border-red-500' : ''} `}
                   />
                 ))}
               </ul>
@@ -203,23 +186,6 @@ export default function Page() {
 
             </div>
 
-            <div className="w-full md:w-1/2 flex flex-col space-y-2">
-              <Label htmlFor="umur" required>Umur :</Label>
-              <Select
-                name="umur"
-                options={umurOptions}
-                value={formData.umur}
-                onChange={handleChange}
-                className={` ${errors.umur ? 'border-red-500' : ''} `}
-              />
-
-              {errors.umur && <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">{errors.umur}</p>}
-
-            </div>
-
-          </div>
-
-          <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
             <div className="flex flex-col space-y-2 md:w-1/2">
               <Label htmlFor="kesibukan" required>Kesibukan :</Label>
               <Select
@@ -234,21 +200,12 @@ export default function Page() {
 
             </div>
 
-            {/* Select Know LC From */}
-            <div className="flex flex-col space-y-2 md:w-1/2">
-              <Label htmlFor="knowlcfrom" required>Tau LC Darimana :</Label>
-              <Select
-                name="knowlcfrom"
-                options={knowLCFromOptions}
-                value={formData.knowlcfrom}
-                onChange={handleChange}
-                className={` ${errors.knowlcfrom ? 'border-red-500' : ''} `}
-              />
-
-              {errors.knowlcfrom && <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">{errors.knowlcfrom}</p>}
-
-            </div>
           </div>
+
+          <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+
+          </div>
+
         </div>
 
         {/* Submit Button */}
@@ -261,6 +218,7 @@ export default function Page() {
           </div>
         </div>
       </form>
+      
     </CustomLayout>
   );
 }

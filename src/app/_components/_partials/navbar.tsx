@@ -12,7 +12,6 @@ const Navbar = () => {
     nomor?: string;
     gender?: string;
     kesibukan?: string;
-    knowlcfrom?: string;
     cabang?: string;
     periode?: string;
     paket?: { value: string; label: string };
@@ -84,8 +83,7 @@ useEffect(() => {
         formData.email &&
         formData.nomor &&
         formData.gender &&
-        formData.kesibukan &&
-        formData.knowlcfrom
+        formData.kesibukan
       ),
       program: Boolean(
       formData.cabang &&

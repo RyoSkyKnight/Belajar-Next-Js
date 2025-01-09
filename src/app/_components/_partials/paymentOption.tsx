@@ -23,7 +23,7 @@ export default function PaymentOption({
   return (
     <div
       className={`flex items-center space-x-4 rounded-lg border p-3 transition-all duration-200 
-      ${checked ? 'border-gray-400 text-black bg-main-color shadow-md' : 'border-gray-400 bg-white text-gray-700'} 
+      ${checked ? 'border-gray-400 text-black bg-blue-500 shadow-md' : 'border-gray-400 bg-white text-gray-700'} 
       hover:shadow-lg cursor-pointer ${className}`}
     >
       <input
@@ -44,7 +44,7 @@ export default function PaymentOption({
             alt=""
             width={42}
             height={32} 
-            className={'h-8 w-8'}
+            className={'h-8 w-8' } 
           />
           <span
             className={`font-medium ${

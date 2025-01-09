@@ -1,11 +1,12 @@
 import Image from "next/image";
-import Link from "next/link";
+// import Link from "next/link";
 import logo from "./_assets/logolc.png";
 import jk from "./_assets/jk.png";
 import tag from "./_assets/logo.png";
 import Navbar from "./_partials/navbar";
+import NewNavbar from "./_partials/newNav";
 import "../globals.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, Bounce } from 'react-toastify';
@@ -29,8 +30,13 @@ export default function CustomLayout({
       router.push("/");
     }
   }, [router]);
-  return (
 
+  const [switchNav,setSwitchNav] = useState(false);
+return (
+  <>
+  {/* <div className="lg:hidden block w-full h-16 bg-white shadow-md">
+    <NewNavbar/>
+    </div> */}
     <div className="flex flex-row w-full h-auto  lg:h-screen bg-img">
     <ToastContainer
   position="top-right"
@@ -62,7 +68,10 @@ export default function CustomLayout({
           <TagDescription mainline={mainline} line={line} />
 
           {/* Navbar */}
-          <Navbar />
+         
+          {switchNav ? <Navbar /> : <NewNavbar /> }
+        
+        
 
           {/* Main Content */}
           <div className="mt-5 mb-5 flex-1">
@@ -90,14 +99,19 @@ export default function CustomLayout({
               alt="Tag Image"
               width={400} // Use appropriate width
               height={100} // Use appropriate height
-              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[100]" // Centering and layering
+              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" // Centering and layering
             />
           </div>
         </div>
       </div>
 
+<div className="fixed top-5 right-5 w-auto h-auto">
+  <button onClick={() => setSwitchNav(!switchNav)}>
+    {switchNav ? 'Switch to New Nav' : 'Switch to Old Nav'}
+  </button>
+</div>
 
-      <Link href="https://cs.kampunginggrislc.com/?utm_content=register" rel="noopener noreferrer" target="_blank">
+      {/* <Link href="https://cs.kampunginggrislc.com/?utm_content=register" rel="noopener noreferrer" target="_blank">
         <div className="fixed bottom-5 right-5 animate-bounce">
           <div className="w-14 h-14 rounded-full bg-red-600 flex flex-col items-center justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mb-0" viewBox="0 -960 960 960" fill="#ffffff">
@@ -106,12 +120,13 @@ export default function CustomLayout({
             <span className="text-[8px] lg:text-[9px] text-white">Tanya CS</span>
 
             {/* Tail */}
+            {/* 
             <div
               className="absolute bottom-[-3px] -left-1 w-0 h-0 border-l-[10px] border-l-transparent border-t-[15px] border-t-red-600 border-r-[10px] border-r-transparent rotate-[40deg] -z-10"
             ></div>
           </div>
         </div>
-      </Link>
+      </Link> */}
 
       {/* <div className="fixed top-5  bg-opacity-90 text-white bg-black p-4 rounded shadow-lg">
         <h3 className="font-bold mb-2">Session Storage Data:</h3>
@@ -120,8 +135,8 @@ export default function CustomLayout({
         </div>
       </div> */}
 
-
     </div>
+    </>
   );
 }
 

@@ -5,9 +5,7 @@ export const dataDiriSchema = z.object({
     email: z.string().email("Email tidak valid").min(1, "Email tidak boleh kosong").refine(str => !str.startsWith(' '), "Email tidak boleh diawali dengan spasi"),
     nomor: z.string().min(10, "Nomor WhatsApp minimal 10 digit").max(15, "Nomor WhatsApp tidak valid"),
     gender: z.string().min(1, "Jenis Kelamin harus dipilih"),
-    umur: z.string().min(1, "Umur harus dipilih"),
     kesibukan: z.string().min(1, "Kesibukan harus dipilih"),
-    knowlcfrom: z.string().min(1, "Harus dipilih"),
 });
 
 export const programSchema = z.object({
