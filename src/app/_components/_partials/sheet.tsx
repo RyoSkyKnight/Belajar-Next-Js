@@ -109,7 +109,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
 
         {/* Header */}
         <div className="px-6 pb-4 flex justify-between items-center">
-          <h2 className="text-lg font-semibold">{title}</h2>
+          <h2 className="text-lg font-semibold text-black">{title}</h2>
           <button
             className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200 focus:outline-none"
             onClick={onClose}

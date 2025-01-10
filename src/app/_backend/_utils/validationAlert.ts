@@ -1,6 +1,6 @@
 import { FormData } from "./Interfaces";
 
-export const validateFormData = (formData: FormData ) => {
+export const validateFormData = (formData: FormData) => {
   const requiredFields = [
     { field: "nama", label: "Nama Lengkap" },
     { field: "email", label: "Email" },
@@ -13,45 +13,32 @@ export const validateFormData = (formData: FormData ) => {
     (item) => !formData[item.field as keyof typeof formData]
   );
 
-  // Validate nama field
   const namaValue = String(formData.nama || '');
-  const isNameValid = /^[a-zA-Z\s.,]+$/.test(namaValue);
-  const isNameStartsWithSpace = namaValue.startsWith(' ');
-  const nomorValue = String(formData.nomor);
+  const nomorValue = String(formData.nomor || '');
 
-  if (nomorValue.length < 10) {
+  if (nomorValue.length < 10 || nomorValue.length > 15) {
     return {
       isValid: false,
-      missingFields: [{ field: "nomor", label: "Nomor WhatsApp minimal 10 digit" }],
+      missingFields: [{ field: "nomor", label: "Nomor WhatsApp harus antara 10-15 digit" }],
     };
   }
 
-  if (nomorValue.length > 15) {
-    return {
-      isValid: false,
-      missingFields: [{ field: "nomor", label: "Nomor WhatsApp tidak valid" }],
-    };
-  }
-
-  if (!isNameValid && namaValue) {
+  if (namaValue && !/^[a-zA-Z\s.,]+$/.test(namaValue)) {
     return {
       isValid: false,
       missingFields: [{ field: "nama", label: "Nama Lengkap hanya boleh mengandung huruf, titik, dan koma" }],
     };
   }
 
-  if (isNameStartsWithSpace) {
+  if (namaValue && namaValue.startsWith(' ')) {
     return {
       isValid: false,
       missingFields: [{ field: "nama", label: "Nama Lengkap tidak boleh diawali dengan spasi" }],
     };
   }
 
-  // Validate email field
   const emailValue = String(formData.email || '');
-  const isEmailStartsWithSpace = emailValue.startsWith(' ');
-
-  if (isEmailStartsWithSpace) {
+  if (emailValue && emailValue.startsWith(' ')) {
     return {
       isValid: false,
       missingFields: [{ field: "email", label: "Email tidak boleh diawali dengan spasi" }],
@@ -63,21 +50,19 @@ export const validateFormData = (formData: FormData ) => {
     missingFields,
   };
 };
-
-export const validateFormDataProgram = ( formData: FormData) => {
-
+export const validateFormDataProgram = (formData: FormData) => {
   const savedData = JSON.parse(sessionStorage.getItem("formData") || "{}");
 
   const requiredFields = [
     { field: "cabang", label: "Cabang" },
     { field: "periode", label: "Periode" },
-    { field: "paket", label: "Paket" },
-    { field: "paketdetail", label: "Durasi Paket" },
+    { field: "paket.value", label: "Paket" }, // Periksa `value` dalam `paket`
+    { field: "paketdetail.value", label: "Durasi Paket" }, // Periksa `value` dalam `paketdetail`
   ];
 
-  // Tambahkan field berdasarkan nilai `data.paket`
+  // Tambahkan field berdasarkan nilai `paket`
   switch (savedData?.paket?.value) {
-    case "intergrated":
+    case "integrated":
       requiredFields.push(
         { field: "jampertemuan", label: "Jam Pertemuan" }
       );
@@ -95,18 +80,29 @@ export const validateFormDataProgram = ( formData: FormData) => {
       break;
   }
 
-  // Cek field yang kosong
-  const missingFields = requiredFields.filter(
-    (item) => !formData[item.field as keyof typeof formData]
-  );
+  // Validasi dengan mendukung properti nested seperti `paket.value`
+  const missingFields = requiredFields.filter((item) => {
+    const fieldParts = item.field.split(".");
+    
+    let value: FormData | Record<string, unknown> = formData;
 
-  // Output validasi
+    // Traverse untuk properti nested
+    for (const part of fieldParts) {
+      if (!value || !value[part]) {
+        return true; // Return true jika properti tidak ada atau kosong
+      }
+      value = value[part] as Record<string, unknown>;
+    }
+
+    return false;
+  });
+
   return {
     isValid: missingFields.length === 0,
-    missingFields, // Field yang kosong beserta label
+    missingFields,
   };
-
 };
+
 
 export const validateFormDataAkomodasi = (formData: FormData) => {
 

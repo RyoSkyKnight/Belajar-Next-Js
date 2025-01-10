@@ -95,6 +95,9 @@ export default function KonfirmasiPage() {
   };
 
   const handlePayment = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+    setErrors((prevErrors) => ({ ...prevErrors, pembayaran: "" }));
+
     const updatedFormData = { ...formData, pembayaran: e.target.value };
     setFormData(updatedFormData);
     sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
@@ -241,10 +244,13 @@ export default function KonfirmasiPage() {
 
             <div
               onClick={() => setIsOpen(true)}
-              className="cursor-pointer border border-gray-400 w-full p-2 rounded-[10px] text-black"
+              className={`cursor-pointer border border-gray-400 w-full p-2 rounded-[10px] text-black ${errors.pembayaran ? "border-red-500" : ""}`}
             >
               {formData.pembayaran || "Pilih Pembayaran"}
             </div>
+
+            {errors.pembayaran && <p className="text-red-500 text-[10px] pl-2 ">{errors.pembayaran}</p>}
+    
 
             <BottomSheet
 
