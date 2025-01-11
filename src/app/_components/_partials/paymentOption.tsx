@@ -23,7 +23,7 @@ export default function PaymentOption({
   return (
     <div
       className={`flex items-center space-x-4 rounded-lg border p-3 transition-all duration-200 
-      ${checked ? 'border-gray-400 text-black bg-blue-500 shadow-md' : 'border-gray-400 bg-white text-gray-700'} 
+      ${checked ? 'border-main-color text-black bg-main-color shadow-md' : 'border-gray-400 bg-white text-gray-700'} 
       hover:shadow-lg cursor-pointer ${className}`}
     >
       <input
@@ -38,13 +38,13 @@ export default function PaymentOption({
         htmlFor={id}
         className="flex flex-1 cursor-pointer w-full items-center justify-between"
       >
-        <div className="flex items-center space-x-3 ">
+        <div className="flex items-center space-x-3  ">
           <Image
             src={icon}
             alt=""
             width={42}
             height={32} 
-            className={'h-8 w-8' } 
+            className={` h-10 w-10 ${ checked ? 'bg-white rounded-full p-1.5 ' : '' }`} 
           />
           <span
             className={`font-medium ${

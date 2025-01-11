@@ -250,65 +250,6 @@ export default function KonfirmasiPage() {
             </div>
 
             {errors.pembayaran && <p className="text-red-500 text-[10px] pl-2 ">{errors.pembayaran}</p>}
-    
-
-            <BottomSheet
-
-              isOpen={isOpen}
-              onClose={() => setIsOpen(false)}
-              title="Pilih Metode Pembayaran"
-              initialHeight="80%" // Custom height
-            >
-              <div className="flex flex-col h-full">
-                <div className="flex-1 overflow-y-auto space-y-4">
-                  {/* Payment Options */}
-                  {pembayaran.map((item) => (
-                    <PaymentOption
-                      key={item.id}
-                      id={item.id}
-                      value={item.value}
-                      checked={item.checked}
-                      icon={item.icon}
-                      label={item.label}
-                      onChange={handlePayment}
-                      className={`${errors.pembayaran ? "border-red-500" : ""}`}
-                    />
-                  ))}
-
-                  <PaymentOption
-                    key="other"
-                    id="other"
-                    value="Pembayaran Lain"
-                    checked={formData.pembayaran === "Pembayaran Lain"}
-                    icon="https://www.pngplay.com/wp-content/uploads/7/Debit-Card-Icon-PNG-Clipart-Background.png"
-                    label="Metode Pembayaran Lain"
-                    onChange={handlePayment}
-                    className={`${errors.pembayaran ? "border-red-500" : ""}`}
-                  />
-                </div>
-
-                {/* Fixed Button at the Bottom */}
-                <div className="sticky bottom-0 bg-white border-t border-gray-200">
-                  <button
-                    type="button"
-                    className="w-full bg-blue-500 text-white py-2 rounded-lg"
-                    onClick={() => {
-                      setIsOpen(false);
-                      const syntheticEvent = {
-                        target: Object.assign(document.createElement("input"), {
-                          value: formData.pembayaran,
-                        }),
-                      } as React.ChangeEvent<HTMLInputElement>;
-                      handlePayment(syntheticEvent);
-                    }}
-                  >
-                    Pilih
-                  </button>
-                </div>
-              </div>
-
-            </BottomSheet>
-
 
           </div>
         </div>
@@ -345,6 +286,64 @@ export default function KonfirmasiPage() {
           </div>
         </div>
       </form>
+
+      <BottomSheet
+
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="Pilih Metode Pembayaran"
+        initialHeight="80%" // Custom height
+      >
+        <div className="flex flex-col h-full">
+          <div className="flex-1 overflow-y-auto space-y-4 mb-12">
+            {/* Payment Options */}
+            {pembayaran.map((item) => (
+              <PaymentOption
+                key={item.id}
+                id={item.id}
+                value={item.value}
+                checked={item.checked}
+                icon={item.icon}
+                label={item.label}
+                onChange={handlePayment}
+                className={`${errors.pembayaran ? "border-red-500" : ""}`}
+              />
+            ))}
+
+            <PaymentOption
+              key="other"
+              id="other"
+              value="Pembayaran Lain"
+              checked={formData.pembayaran === "Pembayaran Lain"}
+              icon="https://www.pngplay.com/wp-content/uploads/7/Debit-Card-Icon-PNG-Clipart-Background.png"
+              label="Metode Pembayaran Lain"
+              onChange={handlePayment}
+              className={` ${errors.pembayaran ? "border-red-500" : ""}`}
+            />
+          </div>
+
+          {/* Fixed Button at the Bottom */}
+          <div className="sticky bottom-0 bg-white border-t border-gray-200">
+            <button
+              type="button"
+              className="w-full bg-main-color text-white py-2 rounded-lg"
+              onClick={() => {
+                setIsOpen(false);
+                const syntheticEvent = {
+                  target: Object.assign(document.createElement("input"), {
+                    value: formData.pembayaran,
+                  }),
+                } as React.ChangeEvent<HTMLInputElement>;
+                handlePayment(syntheticEvent);
+              }}
+            >
+              Pilih
+            </button>
+          </div>
+        </div>
+
+      </BottomSheet>
+
 
     </CustomLayout>
   );
