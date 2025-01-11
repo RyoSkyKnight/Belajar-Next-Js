@@ -278,7 +278,7 @@ export default function KonfirmasiPage() {
             <Button
               disabled={!accepted}
               type="submit"
-              className="w-full transition-all duration-200 bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+              className="w-full transition-all duration-200 text-white  disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
               Konfirmasi
             </Button>

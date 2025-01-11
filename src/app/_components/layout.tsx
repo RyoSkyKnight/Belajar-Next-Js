@@ -37,7 +37,7 @@ return (
   {/* <div className="lg:hidden block w-full h-16 bg-white shadow-md">
     <NewNavbar/>
     </div> */}
-    <div className="flex flex-row w-full h-auto  lg:h-screen bg-img">
+<div className="flex flex-row w-full min-h-screen bg-img overflow-y-auto">
     <ToastContainer
   position="top-right"
   autoClose={2000}
