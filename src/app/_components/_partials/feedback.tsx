@@ -15,10 +15,7 @@ export default function FeedbackPopup({}) {
     setRating(rate);
   };
 
-  const handleSkip = () => {
-    setIsPopupOpen(false); // Close popup
-    console.log("Skipped Feedback");
-  };
+
 
   const handleSubmit = () => {
     console.log("Feedback Submitted:", { rating, feedback });
@@ -40,12 +37,7 @@ export default function FeedbackPopup({}) {
               {/* Title */}
               <h3 className="text-base text-gray-800">Customer Feedback</h3>
 
-              <button
-                className="text-main-color lg:text-base text-xs hover:text-gray-800 transition"
-                onClick={handleSkip}
-              >
-                Skip
-              </button>
+           
             </div>
           
             {/* Star Rating */}
