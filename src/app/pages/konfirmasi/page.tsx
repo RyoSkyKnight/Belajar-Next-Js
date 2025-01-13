@@ -151,7 +151,7 @@ export default function KonfirmasiPage() {
     >
 
       <form onSubmit={handleSubmit} className={`w-full flex flex-col space-y-10 ${akomodasi ? 'lg:space-y-3' : 'lg:space-y-6'}`} >
-        <div className={`mx-auto lg:h-[51.5vh] w-full overflow-x-auto scroll-hidden flex flex-col space-y-6`}>
+        <div className={`mx-auto lg:h-[68vh] w-full overflow-x-auto scroll-hidden flex flex-col space-y-6`}>
           {/* Main Content */}
 
           <div className="w-full mx-auto rounded-3xl lg:border lg:border-gray-400 bg-white p-2 lg:py-3 lg:px-6 h-auto">
@@ -253,7 +253,7 @@ export default function KonfirmasiPage() {
             {errors.pembayaran && <p className="text-red-500 text-[10px] pl-2 ">{errors.pembayaran}</p>}
 
           </div>
-        </div>
+     
         {/* Privacy Policy */}
         <div className="">
           <div className="flex items-center justify-center space-x-2 pb-4">
@@ -285,6 +285,7 @@ export default function KonfirmasiPage() {
             </Button>
 
           </div>
+        </div>
         </div>
       </form>
 

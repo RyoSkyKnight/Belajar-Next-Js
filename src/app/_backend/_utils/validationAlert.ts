@@ -16,6 +16,14 @@ export const validateFormData = (formData: FormData) => {
   const namaValue = String(formData.nama || '');
   const nomorValue = String(formData.nomor || '');
 
+  // Jika Field Kosong Semua maka return Isi Formulir
+  if (missingFields.length === 5) {
+    return {
+      isValid: false,
+      missingFields: [{ field: "all", label: "Isi Formulir" }],
+    };
+  }
+
   if (nomorValue.length < 10 || nomorValue.length > 15) {
     return {
       isValid: false,

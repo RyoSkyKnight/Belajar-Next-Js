@@ -153,7 +153,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="w-full max-w-4xl">
+    <nav className="w-full">
       <div className="relative flex items-center justify-between">
         {buildNavItems().map((item, index, array) => (
           <div
