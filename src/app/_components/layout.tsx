@@ -31,87 +31,86 @@ export default function CustomLayout({
     }
   }, [router]);
 
-  const [switchNav,setSwitchNav] = useState(false);
-return (
-  <>
-  {/* <div className="lg:hidden block w-full h-16 bg-white shadow-md">
-    <NewNavbar/>
-    </div> */}
-<div className="flex flex-row w-full min-h-screen bg-img overflow-y-auto">
-    <ToastContainer
-  position="top-right"
-  autoClose={2000}
-  hideProgressBar={false}
-  newestOnTop={true}
-  closeOnClick={true}
-  className="w-full lg:max-w-lg "
-  pauseOnFocusLoss
-  draggable
-  pauseOnHover
-  theme="light"
-  transition={Bounce}
-/>
+  const [switchNav, setSwitchNav] = useState(false);
+  return (
+    <>
 
-      {/* Container */}
-      <div className="lg:w-[60%] w-[100%] bg-white shadow-lg lg:rounded-tr-[40px] lg:rounded-br-[40px] items-center justify-center align-middle">
-        <div className="mx-10 my-5">
-          {/* Logo */}
-          <Image
-            src={logo}
-            alt="Logo"
-            width={150}
-            height={150}
-            className="mx-auto"
-          />
+      <div className="flex flex-row w-full min-h-screen bg-img overflow-y-auto">
+        <ToastContainer
+          position="top-right"
+          autoClose={2000}
+          hideProgressBar={false}
+          newestOnTop={true}
+          closeOnClick={true}
+          className="w-full lg:max-w-lg "
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+          transition={Bounce}
+        />
 
-          {/* Tagline */}
-          <TagDescription mainline={mainline} line={line} />
+        {/* Container */}
+        <div className="lg:w-[60%] w-[100%] bg-white shadow-lg lg:rounded-tr-[40px] lg:rounded-br-[40px] items-center justify-center align-middle">
+          <div className="mx-10 my-5">
+            {/* Logo */}
+            <Image
+              src={logo}
+              alt="Logo"
+              width={150}
+              height={150}
+              className="mx-auto"
+            />
 
-          {/* Navbar */}
-         
-          {switchNav ? <Navbar /> : <NewNavbar /> }
-        
-        
+            {/* Tagline */}
+            <TagDescription mainline={mainline} line={line} />
 
-          {/* Main Content */}
-          <div className="mt-5 mb-5 flex-1">
-            {children}
+            {/* Navbar */}
+
+            {switchNav ? <Navbar /> : <NewNavbar />}
+
+
+
+            {/* Main Content */}
+            <div className="mt-5 mb-5 flex-1">
+              {children}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Side Content */}
+        {/* Side Content */}
 
-      <div className="lg:block hidden w-[40%] h-full relative">
-        <div className="w-full h-full">
-          <div className="lg:flex items-center justify-center w-full h-full relative">
-            {/* Background image */}
-            <Image
-              src={jk}
-              alt="Side Image"
-              width={900} // Use appropriate width
-              height={600} // Use appropriate height
-              className="object-cover w-full" // Optional for styling
-            />
-            {/* Tag image */}
-            <Image
-              src={tag}
-              alt="Tag Image"
-              width={400} // Use appropriate width
-              height={100} // Use appropriate height
-              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" // Centering and layering
-            />
-          </div>
-        </div>
-      </div>
-
-<div className="fixed top-5 right-5 w-auto h-auto">
-  <button onClick={() => setSwitchNav(!switchNav)}>
-    {switchNav ? 'Switch to New Nav' : 'Switch to Old Nav'}
-  </button>
+        <div className="lg:block hidden w-[40%] h-auto">
+  <div className="w-full h-full">
+    <div className="lg:flex items-center justify-center w-full h-full relative">
+      {/* Background image */}
+      <Image 
+        src={jk} 
+        alt="Side Image"
+        className="object-cover"
+        priority
+      />
+      
+      {/* Tag image */}
+      <Image 
+        src={tag} 
+        alt="Tag Image"
+        width={400}
+        height={100}
+        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10"
+      />
+    </div>
+  </div>
 </div>
 
-      {/* <Link href="https://cs.kampunginggrislc.com/?utm_content=register" rel="noopener noreferrer" target="_blank">
+
+        <div className="fixed top-5 right-5 w-auto h-auto hidden">
+          <button onClick={() => setSwitchNav(!switchNav)}>
+            {switchNav ? 'Switch to New Nav' : 'Switch to Old Nav'}
+          </button>
+        </div>
+
+        {/* <Link href="https://cs.kampunginggrislc.com/?utm_content=register" rel="noopener noreferrer" target="_blank">
         <div className="fixed bottom-5 right-5 animate-bounce">
           <div className="w-14 h-14 rounded-full bg-red-600 flex flex-col items-center justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mb-0" viewBox="0 -960 960 960" fill="#ffffff">
@@ -120,7 +119,7 @@ return (
             <span className="text-[8px] lg:text-[9px] text-white">Tanya CS</span>
 
             {/* Tail */}
-            {/* 
+        {/* 
             <div
               className="absolute bottom-[-3px] -left-1 w-0 h-0 border-l-[10px] border-l-transparent border-t-[15px] border-t-red-600 border-r-[10px] border-r-transparent rotate-[40deg] -z-10"
             ></div>
@@ -128,14 +127,14 @@ return (
         </div>
       </Link> */}
 
-      {/* <div className="fixed top-5  bg-opacity-90 text-white bg-black p-4 rounded shadow-lg">
+        {/* <div className="fixed top-5  bg-opacity-90 text-white bg-black p-4 rounded shadow-lg">
         <h3 className="font-bold mb-2">Session Storage Data:</h3>
         <div className="text-sm">
           <span className="font-semibold">formData:</span> {sessionStorage.getItem('formData')}
         </div>
       </div> */}
 
-    </div>
+      </div>
     </>
   );
 }

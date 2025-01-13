@@ -23,8 +23,7 @@ export default function PaymentOption({
   return (
     <div
       className={`flex items-center space-x-4 rounded-lg border p-3 transition-all duration-200 
-      ${checked ? 'border-main-color text-black bg-main-color shadow-md' : 'border-gray-400 bg-white text-gray-700'} 
-      hover:shadow-lg cursor-pointer ${className}`}
+      ${checked ? 'border-gray-400 text-black bg-main-color ' : 'border-gray-400 hover:border-main-color bg-white text-black'} cursor-pointer ${className}`}
     >
       <input
         type="radio"
@@ -44,12 +43,10 @@ export default function PaymentOption({
             alt=""
             width={42}
             height={32} 
-            className={` h-10 w-10 ${ checked ? 'bg-white rounded-full p-1.5 ' : '' }`} 
+            className={` h-10 w-10 ${ checked ? 'bg-white rounded-lg ' : '' }`} 
           />
           <span
-            className={`font-medium ${
-              checked ? 'text-white' : 'text-gray-800'
-            }`}
+            className={`font-medium text-black`}
           >
             {label}
           </span>

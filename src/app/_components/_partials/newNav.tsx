@@ -4,24 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { UserCircle2, BookOpen, Home, CheckCircle } from "lucide-react";
-
-interface FormData {
-  nama?: string;
-  email?: string;
-  nomor?: string;
-  gender?: string;
-  kesibukan?: string;
-  cabang?: string;
-  periode?: string;
-  paket?: { value: string; label: string };
-  paketdetail?: { value: string; label: string };
-  jampertemuan?: string;
-  jampertemuanprivate1?: string;
-  jampertemuanprivate2?: string;
-  tipekamar?: string;
-  lokasijemput?: string;
-  kendaraan?: string;
-}
+import { FormData } from "@/app/_backend/_utils/Interfaces";
 
 interface CompletedSteps {
   dataDiri: boolean;
@@ -47,7 +30,7 @@ interface NavItem {
 
 const Navbar = () => {
   const pathname = usePathname();
-  const [formData, setFormData] = useState<FormData>({});
+  const [formData, setFormData] = useState<FormData>({} as FormData);
   const [akomodasi, setAkomodasi] = useState("");
   const [completedSteps, setCompletedSteps] = useState<CompletedSteps>({
     dataDiri: false,
@@ -99,8 +82,9 @@ const Navbar = () => {
       program: isProgramComplete(formData),
       akomodasi: Boolean(
         formData.cabang === "PARE - JATIM" &&
-        formData.lokasijemput && 
-        formData.kendaraan
+        (formData.lokasijemput !== "ga_perlu_dijemput"
+          ? [formData.kendaraan && formData.penumpang]
+          : [])
       ),
     });
   }, [formData]);

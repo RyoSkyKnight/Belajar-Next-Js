@@ -77,7 +77,7 @@ export default function FeedbackPopup({}) {
 
             {/* Feedback Textarea */}
             <textarea
-              className="w-full h-24 p-3 border rounded-lg border-gray-300 focus:ring-2 focus:ring-main-color focus:outline-none resize-none mb-5"
+              className="w-full h-24 p-3 border rounded-lg text-black border-gray-300 focus:ring-2 focus:ring-main-color focus:outline-none resize-none mb-5"
               placeholder="Masukan anda sangat berharga bagi kami , tulis masukan anda disini"
               value={feedback}
               onChange={handleFeedbackChange}

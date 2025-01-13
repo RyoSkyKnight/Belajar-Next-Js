@@ -3,7 +3,6 @@
 import CustomLayout from "@/app/_components/layout";
 import { useEffect, useState } from "react";
 import Button from "@/app/_components/_partials/button";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 // import Select from "@/app/_components/_partials/select";
 import { toast } from "react-toastify";
@@ -14,7 +13,8 @@ import PaymentOption from "@/app/_components/_partials/paymentOption";
 import { konfirmasiSchema } from "@/app/_backend/_utils/validationZod";
 import { defaultFormData } from "@/app/_backend/_utils/formData";
 import BottomSheet from "@/app/_components/_partials/sheet";
-
+import Modal from "@/app/_components/_partials/modal";
+import PrivacyPolicy from "@/app/_components/_partials/privacyPolicy";
 
 export default function KonfirmasiPage() {
   const router = useRouter();
@@ -23,6 +23,7 @@ export default function KonfirmasiPage() {
   const [akomodasi, setAkomodasi] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isOpen, setIsOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
 
 
@@ -150,7 +151,7 @@ export default function KonfirmasiPage() {
     >
 
       <form onSubmit={handleSubmit} className={`w-full flex flex-col space-y-10 ${akomodasi ? 'lg:space-y-3' : 'lg:space-y-6'}`} >
-        <div className={`mx-auto lg:h-[53vh] w-full overflow-x-auto scroll-hidden flex flex-col space-y-6`}>
+        <div className={`mx-auto lg:h-[51.5vh] w-full overflow-x-auto scroll-hidden flex flex-col space-y-6`}>
           {/* Main Content */}
 
           <div className="w-full mx-auto rounded-3xl lg:border lg:border-gray-400 bg-white p-2 lg:py-3 lg:px-6 h-auto">
@@ -262,11 +263,11 @@ export default function KonfirmasiPage() {
               checked={accepted}
               onChange={(e) => setAccepted(e.target.checked)}
             />
-            <label htmlFor="privacy" className="text-sm text-gray-500">
+            <label htmlFor="privacy" className="text-sm text-gray-500 flex">
               Dengan melanjutkan, saya menyetujui{" "}
-              <Link href="#" className="text-blue-600 hover:underline">
-                Kebijakan Privasi dan Syarat & Ketentuan
-              </Link>{" "}
+              <div onClick={() => setIsModalOpen(true)} className="text-blue-600 hover:underline mx-1">
+                 Kebijakan Privasi dan Syarat & Ketentuan 
+              </div>{" "}
               yang berlaku
             </label>
           </div>
@@ -326,7 +327,7 @@ export default function KonfirmasiPage() {
           <div className="sticky bottom-0 bg-white border-t border-gray-200">
             <button
               type="button"
-              className="w-full bg-main-color text-white py-2 rounded-lg"
+              className="w-full bg-main-color text-black py-2 rounded-lg"
               onClick={() => {
                 setIsOpen(false);
                 const syntheticEvent = {
@@ -344,6 +345,17 @@ export default function KonfirmasiPage() {
 
       </BottomSheet>
 
+      {/* Modal */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Kebijakan Privasi dan Syarat & Ketentuan"
+      >
+
+        <PrivacyPolicy />
+  
+
+      </Modal>
 
     </CustomLayout>
   );
