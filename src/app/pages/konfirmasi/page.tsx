@@ -263,11 +263,13 @@ export default function KonfirmasiPage() {
               checked={accepted}
               onChange={(e) => setAccepted(e.target.checked)}
             />
-            <label htmlFor="privacy" className="text-sm text-gray-500 flex">
+            <label htmlFor="privacy" className="text-sm text-gray-500 ">
               Dengan melanjutkan, saya menyetujui{" "}
-              <div onClick={() => setIsModalOpen(true)} className="text-blue-600 hover:underline mx-1">
+              <span>
+                <a onClick={() => setIsModalOpen(true)} className="text-blue-600 hover:underline">
                  Kebijakan Privasi dan Syarat & Ketentuan 
-              </div>{" "}
+              </a>
+              </span>{" "}
               yang berlaku
             </label>
           </div>
